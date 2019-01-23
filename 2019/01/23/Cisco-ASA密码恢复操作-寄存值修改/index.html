@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="Cisco-ASA密码恢复操作-寄存值修改,">
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="美妙人生的关键在于你迷上什么东西">
+<meta name="description" content="对于防火墙的密码恢复和路由器类似，原理是一样的。都是通过修改寄存       器的值来恢复。  重新插拔电源线  按ESC键进入ROM Monitor模式，，可以看到提示符rommon #0&amp;gt;  输入命令confreg回车，查看当前的寄存器的值  寄存器的初始值为0x00000001，ASA会出现询问是否改变寄存器的设置，输入no回车  改变寄存器的值为0x41   rommon #1&amp;gt">
+<meta name="keywords" content="Cisco-ASA密码恢复操作-寄存值修改">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux 操作系统的安装">
-<meta property="og:url" content="http://yoursite.com/2019/01/23/Linux-操作系统的安装/index.html">
+<meta property="og:title" content="Cisco ASA密码恢复操作 寄存值修改">
+<meta property="og:url" content="http://yoursite.com/2019/01/23/Cisco-ASA密码恢复操作-寄存值修改/index.html">
 <meta property="og:site_name" content="简">
-<meta property="og:description" content="美妙人生的关键在于你迷上什么东西">
+<meta property="og:description" content="对于防火墙的密码恢复和路由器类似，原理是一样的。都是通过修改寄存       器的值来恢复。  重新插拔电源线  按ESC键进入ROM Monitor模式，，可以看到提示符rommon #0&amp;gt;  输入命令confreg回车，查看当前的寄存器的值  寄存器的初始值为0x00000001，ASA会出现询问是否改变寄存器的设置，输入no回车  改变寄存器的值为0x41   rommon #1&amp;gt">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-23T14:34:04.723Z">
+<meta property="og:updated_time" content="2019-01-23T15:13:43.892Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux 操作系统的安装">
-<meta name="twitter:description" content="美妙人生的关键在于你迷上什么东西">
+<meta name="twitter:title" content="Cisco ASA密码恢复操作 寄存值修改">
+<meta name="twitter:description" content="对于防火墙的密码恢复和路由器类似，原理是一样的。都是通过修改寄存       器的值来恢复。  重新插拔电源线  按ESC键进入ROM Monitor模式，，可以看到提示符rommon #0&amp;gt;  输入命令confreg回车，查看当前的寄存器的值  寄存器的初始值为0x00000001，ASA会出现询问是否改变寄存器的设置，输入no回车  改变寄存器的值为0x41   rommon #1&amp;gt">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/01/23/Linux-操作系统的安装/">
+  <link rel="canonical" href="http://yoursite.com/2019/01/23/Cisco-ASA密码恢复操作-寄存值修改/">
 
 
 
 
 
-  <title>Linux 操作系统的安装 | 简</title>
+  <title>Cisco ASA密码恢复操作 寄存值修改 | 简</title>
   
 
 
@@ -232,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/23/Linux-操作系统的安装/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/23/Cisco-ASA密码恢复操作-寄存值修改/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
@@ -249,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Linux 操作系统的安装</h1>
+          <h1 class="post-title" itemprop="name headline">Cisco ASA密码恢复操作 寄存值修改</h1>
         
 
         <div class="post-meta">
@@ -261,7 +262,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-23T22:34:04+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-23T23:12:10+08:00">
                 2019-01-23
               </time>
             
@@ -299,7 +300,66 @@
       
 
       
-        
+        <p>对于防火墙的密码恢复和路由器类似，原理是一样的。都是通过修改寄存       器的值来恢复。</p>
+<ol>
+<li><p>重新插拔电源线</p>
+</li>
+<li><p>按ESC键进入ROM Monitor模式，，可以看到提示符rommon #0&gt;</p>
+</li>
+<li><p>输入命令confreg回车，查看当前的寄存器的值</p>
+</li>
+<li><p>寄存器的初始值为0x00000001，ASA会出现询问是否改变寄存器的设置，输入no回车</p>
+</li>
+<li><p>改变寄存器的值为0x41</p>
+</li>
+</ol>
+<p>rommon #1&gt;confreg 0x41</p>
+<ol start="6">
+<li>重启设备</li>
+</ol>
+<p>rommon #2&gt;boot</p>
+<ol start="7">
+<li>此时，ASA会跳过startup配置，启动完成后直接进入用户模式</li>
+</ol>
+<p>ciscoasa&gt;</p>
+<ol start="8">
+<li>进入特权模式，密码为空</li>
+</ol>
+<p>ciscoasa&gt;enable</p>
+<p>Password:</p>
+<p>ciscoasa#</p>
+<ol start="9">
+<li>将startup配置保存至running配置中</li>
+</ol>
+<p>ciscoasa#copy startup-config running-config</p>
+<p>Destination filename [running-config]?</p>
+<ol start="10">
+<li>重新设置特权模式的密码为system</li>
+</ol>
+<p>asa#conf t</p>
+<p>asa(config)#enable password system</p>
+<ol start="11">
+<li>改回寄存器的值，强制ASA从startup读取配置启动</li>
+</ol>
+<p>asa(config)#config-register 0x11</p>
+<ol start="12">
+<li>查看当前寄存器的值</li>
+</ol>
+<p>asa(config)#exit</p>
+<p>asa#show version</p>
+<ol start="13">
+<li><p>在输出的最后会看到寄存器的值会在重启设备后由0x41变成0x00000001</p>
+</li>
+<li><p>保存配置</p>
+</li>
+</ol>
+<p>asa#copy run start</p>
+<p>Source filename [running-config]</p>
+<ol start="15">
+<li>输入reload命令重启设备，询问是否保存配置，输入yes回车</li>
+</ol>
+<p>设备重启后，你可以使用重置后的密码进入特权模式</p>
+
       
     </div>
     
@@ -314,6 +374,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Cisco-ASA密码恢复操作-寄存值修改/" rel="tag"># Cisco-ASA密码恢复操作-寄存值修改</a>
+          
+        </div>
+      
 
       
       
@@ -323,8 +389,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/23/PBR路由选择的操作/" rel="next" title="PBR的简单配置">
-                <i class="fa fa-chevron-left"></i> PBR的简单配置
+              <a href="/2019/01/23/Linux-操作系统的安装/" rel="next" title="Linux 操作系统的安装">
+                <i class="fa fa-chevron-left"></i> Linux 操作系统的安装
               </a>
             
           </div>
@@ -332,10 +398,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/01/23/Cisco-ASA密码恢复操作-寄存值修改/" rel="prev" title="Cisco ASA密码恢复操作 寄存值修改">
-                Cisco ASA密码恢复操作 寄存值修改 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
