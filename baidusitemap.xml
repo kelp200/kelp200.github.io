@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
+  <url>
+    <loc>http://yoursite.com/2019/01/23/PBR%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E7%9A%84%E6%93%8D%E4%BD%9C/</loc>
+    <lastmod>2019-01-23</lastmod>
+  </url>  <url>
+    <loc>http://yoursite.com/2019/01/23/Linux-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2019-01-23</lastmod>
+  </url>  <url>
+    <loc>http://yoursite.com/2019/01/22/ASA%E7%9A%84%E5%8D%87%E7%BA%A7%E8%BF%87%E7%A8%8B/</loc>
+    <lastmod>2019-01-23</lastmod>
+  </url>
 </urlset>
