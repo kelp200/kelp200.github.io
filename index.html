@@ -303,8 +303,8 @@
       
         
           
-            <p>一、拓扑图：</p>
-<p>二、配置说明：<br>1、根据拓扑图的配置，R4上面跑OSPF，下面走静态路由，R5和R6走默认路由上去。但是要注意的一点是R4上要加一条命令：default-information originate always (向OSPF区域通知一条默认路由，并且要加always,因为在R4上我们没有默认路由，之前我说在R4上只做了一条静态路由到R5和R6。)<br>2、在保证所有的链路都能通全网之后。我现在在R4上做策略路由：让192.168.45.0能在设置的策略路由上走:<br>A:192.168.45.0/24上的所有路由器——–àR2—-àR1——-1.1.1.1/24<br>B:192.168.46.0/24上的所有路由器——–àR3—-àR1——-1.1.1.1/24<br>3、下面来配置一下route-map<br>R4(config)#access-list 1 permit 192.168.45.0 0.0.0.255 (建立左边的access-list)<br>R4(config)#access-list 1 permit 5.5.5.0. 0.0.0.255<br>R4(config)#access-list 2 permit 192.168.46.0 0. 0.0.0.255 (建立右边的access-list)<br>R4(config)#access-list 2 permit 6.6.6.0. 0.0.0.255</p>
+            <p>#一、拓扑图：<br><img src="https://i.imgur.com/lDuWqmC.jpg" alt=""></p>
+<p>##二、配置说明：<br>1、根据拓扑图的配置，R4上面跑OSPF，下面走静态路由，R5和R6走默认路由上去。但是要注意的一点是R4上要加一条命令：default-information originate always (向OSPF区域通知一条默认路由，并且要加always,因为在R4上我们没有默认路由，之前我说在R4上只做了一条静态路由到R5和R6。)<br>2、在保证所有的链路都能通全网之后。我现在在R4上做策略路由：让192.168.45.0能在设置的策略路由上走:<br>A:192.168.45.0/24上的所有路由器——–àR2—-àR1——-1.1.1.1/24<br>B:192.168.46.0/24上的所有路由器——–àR3—-àR1——-1.1.1.1/24<br>3、下面来配置一下route-map<br>R4(config)#access-list 1 permit 192.168.45.0 0.0.0.255 (建立左边的access-list)<br>R4(config)#access-list 1 permit 5.5.5.0. 0.0.0.255<br>R4(config)#access-list 2 permit 192.168.46.0 0. 0.0.0.255 (建立右边的access-list)<br>R4(config)#access-list 2 permit 6.6.6.0. 0.0.0.255</p>
 <p>R4(config)#route-map pbr1 permit 1 (建立一个route-map名为pbr1)<br>R4(config-route-map)#match policy-list pbr1（匹配策略列表pbr1）或者用match ip add 1<br>R4(config-route-map)#set ip next-hop 192.168.24.2（设置下一跳走192.168.24.2）<br>R4(config)#int s0/2(进入R4的S0/2)<br>R4(config-if)#ip policy route-map pbr1(把之前建立的pbr1挂上去)</p>
 <p>R4(config)#route-map pbr2 permit 2(再建立个route-map 名为pbr2)<br>R4(config-route-map)#match policy-list pbr2 (匹配策略列表pbr2)<br>R4(config-route-map)#set ip next-hop 192.168.34.3(pbr2我设置为走192.168.34.3)<br>R4(config)#int s0/3(进入R4的S0/3)<br>R4(config-if)#ip policy route-map pbr2(把之前建立的pbr2挂上去)</p>
 <p>4、下面在R5上traceroute 1.1.1.1 看一下是不是走我们设定的策略：<br>R5#traceroute 1.1.1.1</p>
@@ -322,7 +322,7 @@
 <p>R4#traceroute ip</p>
 <p>Target IP address: 1.1.1.1<br>Source address: 192.168.34.4<br>Numeric display [n]:<br>Timeout in seconds [3]:<br>Probe count [3]:<br>Minimum Time to Live [1]:<br>Maximum Time to Live [30]:<br>Port Number [33434]:<br>Loose, Strict, Record, Timestamp, Verbose[none]:<br>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
 <p>  1 192.168.34.3 56 msec 56 msec 24 msec<br>  2 192.168.13.1 92 msec *  92 msec</p>
-<p>OK。通过route-map来配置，都能够按照我设置的策略路由来走。</p>
+<p>OK。<br>通过route-map来配置，都能够按照我设置的策略路由来走。</p>
 
           
         
