@@ -79,16 +79,17 @@
 
 
 
-<meta name="description" content="美妙人生的关键在于你迷上什么东西">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Karl Li的技术博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="一、升级前准备工作1、准备好所要升级的IOS文件及对应的ASDM文件2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2） 二、升级步骤1、telnet上ASAASA&amp;gt;ena                    //进入特权模式ASA#conf t                 //进入配置模式 2、查看ASA上的文件、版本信息及启动文件AS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kali">
+<meta property="og:url" content="http://yoursite.com/2019/01/22/ASA的升级过程/index.html">
 <meta property="og:site_name" content="Karl Li的技术博客">
-<meta property="og:description" content="美妙人生的关键在于你迷上什么东西">
+<meta property="og:description" content="一、升级前准备工作1、准备好所要升级的IOS文件及对应的ASDM文件2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2） 二、升级步骤1、telnet上ASAASA&amp;gt;ena                    //进入特权模式ASA#conf t                 //进入配置模式 2、查看ASA上的文件、版本信息及启动文件AS">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-23T05:43:58.692Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Karl Li的技术博客">
-<meta name="twitter:description" content="美妙人生的关键在于你迷上什么东西">
+<meta name="twitter:title" content="kali">
+<meta name="twitter:description" content="一、升级前准备工作1、准备好所要升级的IOS文件及对应的ASDM文件2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2） 二、升级步骤1、telnet上ASAASA&amp;gt;ena                    //进入特权模式ASA#conf t                 //进入配置模式 2、查看ASA上的文件、版本信息及启动文件AS">
 
 
 
@@ -118,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/01/22/ASA的升级过程/">
 
 
 
 
 
-  <title>Karl Li的技术博客</title>
+  <title>kali | Karl Li的技术博客</title>
   
 
 
@@ -143,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -217,267 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/23/PBR的简单配置/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Karl Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Karl Li的技术博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/23/PBR的简单配置/" itemprop="url">PBR的简单配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-23T13:41:31+08:00">
-                2019-01-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>一、拓扑图：</p>
-<p>二、配置说明：<br>1、根据拓扑图的配置，R4上面跑OSPF，下面走静态路由，R5和R6走默认路由上去。但是要注意的一点是R4上要加一条命令：default-information originate always (向OSPF区域通知一条默认路由，并且要加always,因为在R4上我们没有默认路由，之前我说在R4上只做了一条静态路由到R5和R6。)<br>2、在保证所有的链路都能通全网之后。我现在在R4上做策略路由：让192.168.45.0能在设置的策略路由上走:<br>A:192.168.45.0/24上的所有路由器——–àR2—-àR1——-1.1.1.1/24<br>B:192.168.46.0/24上的所有路由器——–àR3—-àR1——-1.1.1.1/24<br>3、下面来配置一下route-map<br>R4(config)#access-list 1 permit 192.168.45.0 0.0.0.255 (建立左边的access-list)<br>R4(config)#access-list 1 permit 5.5.5.0. 0.0.0.255<br>R4(config)#access-list 2 permit 192.168.46.0 0. 0.0.0.255 (建立右边的access-list)<br>R4(config)#access-list 2 permit 6.6.6.0. 0.0.0.255</p>
-<p>R4(config)#route-map pbr1 permit 1 (建立一个route-map名为pbr1)<br>R4(config-route-map)#match policy-list pbr1（匹配策略列表pbr1）或者用match ip add 1<br>R4(config-route-map)#set ip next-hop 192.168.24.2（设置下一跳走192.168.24.2）<br>R4(config)#int s0/2(进入R4的S0/2)<br>R4(config-if)#ip policy route-map pbr1(把之前建立的pbr1挂上去)</p>
-<p>R4(config)#route-map pbr2 permit 2(再建立个route-map 名为pbr2)<br>R4(config-route-map)#match policy-list pbr2 (匹配策略列表pbr2)<br>R4(config-route-map)#set ip next-hop 192.168.34.3(pbr2我设置为走192.168.34.3)<br>R4(config)#int s0/3(进入R4的S0/3)<br>R4(config-if)#ip policy route-map pbr2(把之前建立的pbr2挂上去)</p>
-<p>4、下面在R5上traceroute 1.1.1.1 看一下是不是走我们设定的策略：<br>R5#traceroute 1.1.1.1</p>
-<p>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.45.4 56 msec 36 msec 8 msec<br>  2 192.168.24.2 84 msec 40 msec 56 msec<br>  3 192.168.12.1 112 msec *  132 msec     （对，没错！）</p>
-<p>再看一下R6：<br>R6#traceroute 1.1.1.1</p>
-<p>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.46.4 56 msec 56 msec 24 msec<br>  2 192.168.34.3 52 msec 64 msec 52 msec<br>  3 192.168.13.1 116 msec *  148 msec   （也没错！）</p>
-<p>5、在R4上show route-map 看一下包的情况，都增加了成6 ,ping 的话默认为5：<br>R4#show route-map<br>route-map pbr1, permit, sequence 1<br>  Match clauses:<br>    IP Policy lists:<br>        pbr1<br>  Set clauses:<br>    ip next-hop 192.168.24.2<br>  Policy routing matches: 6 packets, 576 bytes<br>route-map pbr2, permit, sequence 2<br>  Match clauses:<br>    IP Policy lists:<br>        pbr2<br>  Set clauses:<br>    ip next-hop 192.168.34.3<br>  Policy routing matches: 6 packets, 1652 bytes<br>R4#</p>
-<p>6、但是我们现在在R4上去traceroute 看一下：<br>R4#traceroute 1.1.1.1</p>
-<p>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.34.3 64 msec<br>    192.168.24.2 76 msec<br>    192.168.34.3 8 msec<br>  2 192.168.12.1 88 msec<br>    192.168.13.1 88 msec *<br>R4#<br>发现是两边走，那么是什么原因呢？因为我们没有在R4上去做,这就涉及到本地的概念。没有对本地接口生效，之前分明是定义了45.0网段，但45.4这个接口却不能生效。<br>7、我们的解决办法是，在R4上加两条命令去应用pbr1和pbr2<br>R4(config)#ip local policy route-map  pbr1<br>R4(config)#ip local policy route-map  pbr2<br>这其中要注意，如果我只应用pbr1，那么在R4上traceroute 1.1.1.1 的话，它只会走左边，不会去走右边链路到1.1.1.1 所以我们要定义把pbr2也应用上去。这也是匹配了前面定义的route-map。<br>8、下面再来扩展traceroute 看一下效果：<br>R4#traceroute ip</p>
-<p>Target IP address: 1.1.1.1<br>Source address: 192.168.24.4<br>Numeric display [n]:<br>Timeout in seconds [3]:<br>Probe count [3]:<br>Minimum Time to Live [1]:<br>Maximum Time to Live [30]:<br>Port Number [33434]:<br>Loose, Strict, Record, Timestamp, Verbose[none]:<br>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.24.2 32 msec 56 msec 20 msec<br>  2 192.168.12.1 88 msec *  92 msec</p>
-<p>R4#traceroute ip</p>
-<p>Target IP address: 1.1.1.1<br>Source address: 192.168.34.4<br>Numeric display [n]:<br>Timeout in seconds [3]:<br>Probe count [3]:<br>Minimum Time to Live [1]:<br>Maximum Time to Live [30]:<br>Port Number [33434]:<br>Loose, Strict, Record, Timestamp, Verbose[none]:<br>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.34.3 56 msec 56 msec 24 msec<br>  2 192.168.13.1 92 msec *  92 msec</p>
-<p>OK。通过route-map来配置，都能够按照我设置的策略路由来走。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/23/linux的安装/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Karl Li">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Karl Li的技术博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/23/linux的安装/" itemprop="url">linux的安装</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-23T13:38:24+08:00">
-                2019-01-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
 
   
 
@@ -507,9 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/22/ASA的升级过程/" itemprop="url">kali</a></h1>
+          <h1 class="post-title" itemprop="name headline">kali</h1>
         
 
         <div class="post-meta">
@@ -559,9 +299,7 @@
       
 
       
-        
-          
-            <p>一、升级前准备工作<br>1、准备好所要升级的IOS文件及对应的ASDM文件<br>2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2）</p>
+        <p>一、升级前准备工作<br>1、准备好所要升级的IOS文件及对应的ASDM文件<br>2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2）</p>
 <p>二、升级步骤<br>1、telnet上ASA<br>ASA&gt;ena                    //进入特权模式<br>ASA#conf t                 //进入配置模式</p>
 <p>2、查看ASA上的文件、版本信息及启动文件<br>ASA(config)# dir           //查看asa上的文件<br>Directory of disk0:/<br>4879   -rw- 8202240   19:18:10 Nov 16 2011   asa721-k8.bin<br>2391   -rw- 5539756   00:43:38 Nov 05 2007   asdm521.bin<br>4842   drw- 0         18:51:24 Nov 16 2011 log<br>4843   drw- 0         18:51:36 Nov 16 2011 crypto_archive<br>255426560 bytes total (215465984 bytes free)</p>
 <p>CISCOASA(config)# show ver      //查看版本信息及启动文件<br>Cisco Adaptive Security Appliance Software Version 7.2(1)<br>Device Manager Version 5.2(1)<br>。。。。。<br>System image file is “disk0:/asa721-k8.bin” //这就是启动文件和路径<br>。。。。。</p>
@@ -572,8 +310,6 @@
 <p>2、设置ASA<br>升级IOS需要对ASA进行一些简单的设置，如设置设备的地址、设置tftp服务器的地址、设置IOS软件的文件名、sync保存、用ping命令测试与tftpserver的连通性、最后执行命令tftpdnld，软件开始装入。<br>注意：在监控模式下我们需要将电脑和ASA5510的管理接口相连，IP地址也是为管理接口设置的。<br>rommon #2&gt; ADDRESS=192.168.1.1（路由器地址）<br>rommon #3&gt; GATEWAY=192.168.1.2（默认网关，设置为本机地址即可）<br>rommon #4&gt; IMAGE=asa821-k8.bin（指定IOS文件名）<br>rommon #5&gt; SERVER=192.168.1.2（TFTP SERVER 地址，即本机地址）<br>rommon #6&gt;<br>rommon #6&gt; sync<br>Updating NVRAM Parameters…<br>rommon #7&gt; ping 192.168.1.2<br>Link is UP<br>Sending 20, 100-byte ICMP Echoes to 192.168.1.2, timeout is 4 seconds:<br>?!!!!!!!!!!!!!!!!!!!<br>Success rate is 95 percent (19/20)</p>
 <p>3、执行tftpdnld命令<br>执行后显示如下：<br>rommon #8&gt; tftpdnld<br>ROMMON Variable Settings:<br>ADDRESS=192.168.1.1<br>SERVER=192.168.1.<br>GATEWAY=192.168.1.2<br>PORT=Management0/0<br>VLAN=untagged<br>IMAGE=asa821-k8.bin<br>CONFIG=<br>LINKTIMEOUT=20<br>PKTTIMEOUT=4<br>RETRY=20<br>tftp <a href="mailto:asa821-k8.bin@192.168.1.2" target="_blank" rel="noopener">asa821-k8.bin@192.168.1.2</a> via 192.168.1.2<br>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>4、将IOS上传到ASA<br>此时IOS还没有装入ASA，而是从tftp引导启动设备。这一点当设备启动完毕后可以用show version命令看到：<br>System image file is “t<a href="ftp://192.168.1.2/asa821-k8.bin&quot;" target="_blank" rel="noopener">ftp://192.168.1.2/asa821-k8.bin&quot;</a><br>启动完毕后需要将tftp server连接到除管理接口以外的其它接口，然后再升级IOS<br>注意：必须要将接口配置成 inside口<br>ASA#conf t<br>ASA(config)#int e0/0<br>ASA(config-if)#nameif inside<br>ASA(config-if)#ip add 192.168.1.1 255.255.255.0<br>ASA(config-if)#no sh<br>ASA#ping 192.168.1.2<br>通后就可以升级IOS了<br>ASA#copy tftp: flash:<br>Tftp server IP address：192.168.1.2<br>Source file name:asa821-k8.bin<br>Destination file name:asa821-k8.bin<br>到这一步并没有结束，此时还需要进行boot system的设置<br>使用命令<br>ASA(config)#boot system disk0：/asa821-k8.bin<br>ASA(config)#asdm image disk0：/asdm-621.bin<br>ASA(config)#wr<br>然后reload一下就可以了<br>重启之后在dir查看一下，基本上就大功告成了。<br>IOS恢复以后呢还需要将图形界面管理软件拷贝到ASA，和copy IOS的命令是一样的。</p>
 
-          
-        
       
     </div>
     
@@ -590,12 +326,28 @@
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/23/linux的安装/" rel="prev" title="linux的安装">
+                linux的安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
       
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -605,10 +357,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -616,6 +369,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -818,6 +575,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

@@ -1,2 +1,3 @@
-http://yoursite.com/2019/01/22/kali/
-http://yoursite.com/2019/01/22/hello-world/
+http://yoursite.com/2019/01/23/PBR的简单配置/
+http://yoursite.com/2019/01/23/linux的安装/
+http://yoursite.com/2019/01/22/ASA的升级过程/
