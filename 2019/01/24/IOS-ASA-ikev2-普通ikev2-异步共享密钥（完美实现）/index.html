@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ikev2,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="#R2—-ASA之间建立ikev2 VPN ##下拓扑图在ASA于R2之间实现ikev2 VPN的同步密钥认证和异步密钥认证 R2:IKEV2配置步骤：一阶段：1.配置ikev2 proposal建议">
+<meta name="keywords" content="ikev2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“IOS&amp;ASA ikev2 普通ikev2+异步共享密钥（完美实现）">
+<meta property="og:url" content="http://yoursite.com/2019/01/24/IOS-ASA-ikev2-普通ikev2-异步共享密钥（完美实现）/index.html">
+<meta property="og:site_name" content="简">
+<meta property="og:description" content="#R2—-ASA之间建立ikev2 VPN ##下拓扑图在ASA于R2之间实现ikev2 VPN的同步密钥认证和异步密钥认证 R2:IKEV2配置步骤：一阶段：1.配置ikev2 proposal建议">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/MJ2RWrt.png">
+<meta property="og:updated_time" content="2019-01-24T09:01:29.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="“IOS&amp;ASA ikev2 普通ikev2+异步共享密钥（完美实现）">
+<meta name="twitter:description" content="#R2—-ASA之间建立ikev2 VPN ##下拓扑图在ASA于R2之间实现ikev2 VPN的同步密钥认证和异步密钥认证 R2:IKEV2配置步骤：一阶段：1.配置ikev2 proposal建议">
+<meta name="twitter:image" content="https://i.imgur.com/MJ2RWrt.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/24/IOS-ASA-ikev2-普通ikev2-异步共享密钥（完美实现）/">
+
+
+
+
+
+  <title>“IOS&ASA ikev2 普通ikev2+异步共享密钥（完美实现） | 简</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            目录
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/24/IOS-ASA-ikev2-普通ikev2-异步共享密钥（完美实现）/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Karl Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">“IOS&ASA ikev2 普通ikev2+异步共享密钥（完美实现）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T16:07:15+08:00">
+                2019-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#R2—-ASA之间建立ikev2 VPN</p>
+<p>##下拓扑图在ASA于R2之间实现ikev2 VPN的同步密钥认证和异步密钥认证<br><img src="https://i.imgur.com/MJ2RWrt.png" alt=""></p>
+<h2 id="R2"><a href="#R2" class="headerlink" title="R2:"></a>R2:</h2><p>IKEV2配置步骤：<br>一阶段：<br>1.配置ikev2 proposal建议<br><a id="more"></a><br>  1.1 encryption<br>  1.2 integrity<br>  1.3 group14<br>  1.4 prf<br>1-1.1调用proposal和匹配local接口地址 *</p>
+<p>2.配置ikev2 keyring密匙串<br>  2.1 peer<br>  2.2 VPN对端IP，address<br>  2.3 hostname<br>  2.4 认证方式，PSK<br>3.配置ikev2 profile<br>  3.1 匹配对端<br>  3.2 本地标志<br>  3.3 对端认证方式<br>  3.4 本地认证方式<br>  3.5 调用密匙串<br>二阶段：<br>4.配置IPSec transform转换集，配置感兴趣流量<br>5.配置IPSec Map<br>  5.1 调用transoform<br>  5.2 调用ikev2-profile<br>  5.3 set对端peer<br>  5.4 match 感兴趣流量<br>6.出接口调用MAP.</p>
+<h2 id="ASA："><a href="#ASA：" class="headerlink" title="ASA："></a>ASA：</h2><p>IKEV2配置步骤：<br>一阶段：<br>1.配置ikev2 policy<br>  1.1 encryption<br>  1.2 integrity<br>  1.3 group14<br>  1.4 prf<br>2.配置ikev2 policy开启在接口<br>二阶段：<br>4.配置ipsec-proposal转换集<br>  4.1 protocol esp encryption<br>  4.2 protocol esp integrity<br>5.配置感兴趣流量 ACL<br>6.配置MAP<br>  6.1 match address<br>  6.2  set peer 对端<br>  6.3 set ikev2 ipsec-proposal 调用proposal<br>  6.4 interface 启用map<br>注意ASA还需要配置NAT，内部流量做免除<br>7.发现不通,做匹配的感情去流量做NAT免除</p>
+<h2 id="R2-1"><a href="#R2-1" class="headerlink" title="R2"></a>R2</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ikev2 proposal PROP</span><br><span class="line">    encryption aes-cbc-128 aes-cbc-256 des</span><br><span class="line">     integrity sha1 sha256 md5</span><br><span class="line">    group 1 2 5</span><br><span class="line">!</span><br><span class="line">crypto ikev2 policy IKEV2_POLICY</span><br><span class="line">    match address local 202.100.1.2</span><br><span class="line">    proposal PROP</span><br><span class="line">!</span><br><span class="line">crypto ikev2 keyring KEY2</span><br><span class="line">  peer ASA</span><br><span class="line">    address 199.105.11.1</span><br><span class="line">    hostname ASA</span><br><span class="line">    identity address 199.105.11.1</span><br><span class="line">    pre-shared-key CISCO</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ikev2 profile PROFILE</span><br><span class="line"> match identity remote address 199.105.11.1 255.255.255.255 </span><br><span class="line"> identity local address 202.100.1.2</span><br><span class="line"> authentication remote pre-share</span><br><span class="line"> authentication local pre-share</span><br><span class="line"> keyring local KEY2</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ipsec transform-set TRANSF esp-des esp-sha-hmac</span><br><span class="line"> mode tunnel</span><br><span class="line">crypto ipsec transform-set TRANSF2 esp-des esp-sha-hmac</span><br><span class="line"> mode tunnel</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto map ikev2MAP 10 ipsec-isakmp</span><br><span class="line"> set peer 199.105.11.1</span><br><span class="line"> set transform-set TRANSF TRANSF2</span><br><span class="line"> set ikev2-profile PROFILE </span><br><span class="line"> match address ikev2VPN</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/0</span><br><span class="line">ip address 172.16.10.2 255.255.255.0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/1</span><br><span class="line">ip address 202.100.1.2 255.255.255.0</span><br><span class="line">crypto map ikev2MAP</span><br><span class="line">!</span><br><span class="line">ip route 0.0.0.0 0.0.0.0 202.100.1.254</span><br><span class="line">!</span><br><span class="line">ip access-list extended ikev2VPN</span><br><span class="line">permit ip 172.16.10.0 0.0.0.255 192.168.10.0 0.0.0.255</span><br><span class="line">!</span><br><span class="line">!</span><br></pre></td></tr></table></figure>
+<h2 id="ASA"><a href="#ASA" class="headerlink" title="ASA"></a>ASA</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">!</span><br><span class="line">object network inside_user</span><br><span class="line">subnet 192.168.10.0 255.255.255.0</span><br><span class="line">object network remote_user</span><br><span class="line">subnet 172.16.10.0 255.255.255.0</span><br><span class="line">access-list IKEV2 extended permit ip 192.168.10.0 255.255.255.0 172.16.10.0 255.255.255.0</span><br><span class="line">pager lines 24</span><br><span class="line">mtu outside 1500</span><br><span class="line">mtu inside 1500</span><br><span class="line">no failover</span><br><span class="line">icmp unreachable rate-limit 1 burst-size 1</span><br><span class="line">no asdm history enable</span><br><span class="line">arp timeout 14400</span><br><span class="line">nat (inside,outside) source static inside_user inside_user destination static remote_user remote_user        -----------------NAT免除</span><br><span class="line">route outside 0.0.0.0 0.0.0.0 199.105.11.254 1</span><br><span class="line">timeout xlate 3:00:00</span><br><span class="line">timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 icmp 0:00:02</span><br><span class="line">timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00</span><br><span class="line">timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00</span><br><span class="line">timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute</span><br><span class="line">timeout tcp-proxy-reassembly 0:01:00</span><br><span class="line">timeout floating-conn 0:00:00</span><br><span class="line">dynamic-access-policy-record DfltAccessPolicy</span><br><span class="line">user-identity default-domain LOCAL</span><br><span class="line">no snmp-server location</span><br><span class="line">no snmp-server contact</span><br><span class="line">snmp-server enable traps snmp authentication linkup linkdown coldstart warmstart</span><br><span class="line">crypto ipsec ikev2 ipsec-proposal TRANSF               -----------------定义Proposal</span><br><span class="line">  protocol esp encryption aes-256 aes des</span><br><span class="line">  protocol esp integrity sha-1 md5</span><br><span class="line">crypto map IKEV2_MAP 10 match address IKEV2            -----------------匹配感兴趣流量</span><br><span class="line">crypto map IKEV2_MAP 10 set peer 202.100.1.2            -----------------匹配对端peer</span><br><span class="line">crypto map IKEV2_MAP 10 set ikev2 ipsec-proposal TRANSF         -----------------调用Proposal</span><br><span class="line">crypto map IKEV2_MAP interface outside                                </span><br><span class="line">crypto ikev2 policy 10                                          -----------------定义一阶段策略</span><br><span class="line">  encryption aes-256 aes des</span><br><span class="line">  integrity sha256 sha md5</span><br><span class="line">  group 5 2 1</span><br><span class="line">  prf sha256 sha md5</span><br><span class="line">  lifetime seconds 86400</span><br><span class="line">crypto ikev2 enable outside</span><br><span class="line">telnet timeout 5</span><br><span class="line">ssh timeout 5</span><br><span class="line">console timeout 0</span><br><span class="line">threat-detection basic-threat</span><br><span class="line">threat-detection statistics access-list</span><br><span class="line">no threat-detection statistics tcp-intercept</span><br><span class="line">tunnel-group 202.100.1.2 type ipsec-l2l                                ******vpn类型</span><br><span class="line">tunnel-group 202.100.1.2 ipsec-attributes                              ******属性</span><br><span class="line">   ikev2 remote-authentication pre-shared-key *****                    ******远端共享密码        </span><br><span class="line">   ikev2 local-authentication pre-shared-key *****                     ******本地共享密码</span><br><span class="line">!</span><br></pre></td></tr></table></figure>
+<h1 id="异步密钥认证"><a href="#异步密钥认证" class="headerlink" title="异步密钥认证"></a>异步密钥认证</h1><h2 id="R2-2"><a href="#R2-2" class="headerlink" title="R2"></a>R2</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">crypto ikev2 keyring KEY2</span><br><span class="line">peer ASA_ikev2</span><br><span class="line">  address 199.105.11.1</span><br><span class="line">  pre-shared-key local R2KEY</span><br><span class="line">  pre-shared-key remote ASAKEY</span><br></pre></td></tr></table></figure>
+<h2 id="ASA-1"><a href="#ASA-1" class="headerlink" title="ASA"></a>ASA</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ASA#  sh run tunnel-group</span><br><span class="line">tunnel-group 202.100.1.2 type ipsec-l2l</span><br><span class="line">tunnel-group 202.100.1.2 ipsec-attributes</span><br><span class="line">ikev2 remote-authentication pre-shared-key *****</span><br><span class="line">ikev2 local-authentication pre-shared-key *****</span><br></pre></td></tr></table></figure>
+<h2 id="测试的ASADebug信息"><a href="#测试的ASADebug信息" class="headerlink" title="测试的ASADebug信息"></a>测试的ASADebug信息</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br></pre></td><td class="code"><pre><span class="line">ASA842# debug crypto ikev2 protocol 127</span><br><span class="line">ASA842#</span><br><span class="line">ASA842# IKEv2-PROTO-3: Rx [L 199.105.11.1:500/R 202.100.1.2:500/VRF i0:f0] m_id: 0x0</span><br><span class="line">IKEv2-PROTO-3: HDR[i:67CB9BFAD845A573 - r: 0000000000000000]</span><br><span class="line">IKEv2-PROTO-4: IKEV2 HDR ispi: 67CB9BFAD845A573 - rspi: 0000000000000000</span><br><span class="line">IKEv2-PROTO-4: Next payload: SA, version: 2.0</span><br><span class="line">IKEv2-PROTO-4: Exchange type: IKE_SA_INIT, flags: INITIATOR</span><br><span class="line">IKEv2-PROTO-4: Message id: 0x0, length: 496</span><br><span class="line"></span><br><span class="line">SA  Next payload: KE, reserved: 0x0, length: 144</span><br><span class="line">IKEv2-PROTO-4:   last proposal: 0x0, reserved: 0x0, length: 140</span><br><span class="line">  Proposal: 1, Protocol id: IKE, SPI size: 0, #trans: 15</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: SHA512</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: SHA384</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: SHA256</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: SHA1</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: MD5</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA512</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA384</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA256</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA96</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: MD596</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 4, reserved: 0x0, id: DH_GROUP_1536_MODP/Group 5</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x0, reserved: 0x0: length: 8</span><br><span class="line">    type: 4, reserved: 0x0, id: DH_GROUP_1024_MODP/Group 2</span><br><span class="line"></span><br><span class="line">KE  Next payload: N, reserved: 0x0, length: 200</span><br><span class="line">    DH group: 5, Reserved: 0x0</span><br><span class="line"></span><br><span class="line">     47 36 b9 94 8d e3 cf e8 a3 4d 6a 81 e1 90 06 c0</span><br><span class="line">     d8 2c 26 9e eb c6 8d ab c5 6c e8 62 dc 62 b4 cb</span><br><span class="line">     54 a8 cf 22 ab 93 d5 8c 94 e1 e2 d8 ac 03 d2 89</span><br><span class="line">     36 e6 18 9e 0a 6a 5d 06 a2 99 98 dc 52 ea d3 29</span><br><span class="line">     73 1b da aa 9a ed 4f 7d d4 62 a9 75 13 cb c9 37</span><br><span class="line">     88 3e a6 d4 6e bb 25 cf e3 06 51 24 d8 17 06 07</span><br><span class="line">     b0 e2 d8 74 f7 58 8a 2a 01 7e 61 df b9 ad f5 fe</span><br><span class="line">     c6 b0 8b ff f1 92 fd 92 5b f3 d2 b9 f7 84 b4 05</span><br><span class="line">     ad c5 18 7c 21 ce e7 69 36 13 4d b4 3b 45 8e 8b</span><br><span class="line">     c8 0d 23 23 92 e0 c7 9a 2c 56 7f 34 dc 1d a9 8d</span><br><span class="line">     34 bd ef 71 aa c0 56 0e ef 4a 38 c0 da c8 67 31</span><br><span class="line">     c3 5f 03 9b bf 4d 1f f3 7f a3 74 4b f5 b8 d5 86</span><br><span class="line">N  Next payload: VID, reserved: 0x0, length: 24</span><br><span class="line"></span><br><span class="line">     f5 06 2b ac f6 f2 6c c8 12 8a 0b a7 71 a7 7a 3b</span><br><span class="line">     db 52 ce 1b</span><br><span class="line">IKEv2-PROTO-5: Parse Vendor Specific Payload: CISCO-DELETE-REASON VID  Next payload: VID, reserved: 0x0, length: 23</span><br><span class="line"></span><br><span class="line">     43 49 53 43 4f 2d 44 45 4c 45 54 45 2d 52 45 41</span><br><span class="line">     53 4f 4e</span><br><span class="line">IKEv2-PROTO-5: Parse Vendor Specific Payload: (CUSTOM) VID  Next payload: NOTIFY, reserved: 0x0, length: 21</span><br><span class="line"></span><br><span class="line">     46 4c 45 58 56 50 4e 2d 53 55 50 50 4f 52 54 45</span><br><span class="line">     44</span><br><span class="line">IKEv2-PROTO-5: Parse Notify Payload: NAT_DETECTION_SOURCE_IP NOTIFY(NAT_DETECTION_SOURCE_IP)  Next payload: NOTIFY, reserved: 0x0, length: 28</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NAT_DETECTION_SOURCE_IP</span><br><span class="line"></span><br><span class="line">     e2 1a a3 73 a3 8c 06 ed 09 3e c8 f2 de 53 1e 5e</span><br><span class="line">     3e f7 bd 4b</span><br><span class="line">IKEv2-PROTO-5: Parse Notify Payload: NAT_DETECTION_DESTINATION_IP NOTIFY(NAT_DETECTION_DESTINATION_IP)  Next payload: NONE, reserved: 0x0, length: 28</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NAT_DETECTION_DESTINATION_IP</span><br><span class="line"></span><br><span class="line">     f4 f9 3f b2 a9 1c 98 ff b9 25 4c a4 85 da 68 7c</span><br><span class="line">     7c d9 f4 f9</span><br><span class="line"></span><br><span class="line">Decrypted packet:Data: 496 bytes</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: IDLE Event: EV_RECV_INIT</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_INIT Event: EV_VERIFY_MSG</span><br><span class="line">IKEv2-PROTO-3: (5): Verify SA init message</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_INIT Event: EV_INSERT_SA</span><br><span class="line">IKEv2-PROTO-3: (5): Insert SA</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_INIT Event: EV_GET_IKE_POLICY</span><br><span class="line">IKEv2-PROTO-3: (5): Getting configured policies</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_INIT Event: EV_PROC_MSG</span><br><span class="line">IKEv2-PROTO-2: (5): Processing initial message</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_INIT Event: EV_DETECT_NAT</span><br><span class="line">IKEv2-PROTO-3: (5): Process NAT discovery notify</span><br><span class="line">IKEv2-PROTO-5: (5): Processing nat detect src notify</span><br><span class="line">IKEv2-PROTO-5: (5): Remote address matched</span><br><span class="line">IKEv2-PROTO-5: (5): Processing nat detect dst notify</span><br><span class="line">IKEv2-PROTO-5: (5): Local address matched</span><br><span class="line">IKEv2-PROTO-5: (5): No NAT found</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_INIT Event: EV_CHK_CONFIG_MODE</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_SET_POLICY</span><br><span class="line">IKEv2-PROTO-3: (5): Setting configured policies</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_CHK_AUTH4PKI</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_PKI_SESH_OPEN</span><br><span class="line">IKEv2-PROTO-3: (5): Opening a PKI session</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_GEN_DH_KEY</span><br><span class="line">IKEv2-PROTO-3: (5): Computing DH public key</span><br><span class="line">IKEv2-PROTO-3: (5):</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_NO_EVENT</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_OK_RECD_DH_PUBKEY_RESP</span><br><span class="line">IKEv2-PROTO-5: (5): Action: Action_Null</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_GEN_DH_SECRET</span><br><span class="line">IKEv2-PROTO-3: (5): Computing DH secret key</span><br><span class="line">IKEv2-PROTO-3: (5):</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_NO_EVENT</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_OK_RECD_DH_SECRET_RESP</span><br><span class="line">IKEv2-PROTO-5: (5): Action: Action_Null</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_GEN_SKEYID</span><br><span class="line">IKEv2-PROTO-3: (5): Generate skeyid</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_GET_CONFIG_MODE</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_BLD_INIT Event: EV_BLD_MSG</span><br><span class="line">IKEv2-PROTO-2: (5): Sending initial message</span><br><span class="line">IKEv2-PROTO-3:   IKE Proposal: 1, SPI size: 0 (initial negotiation),</span><br><span class="line">Num. transforms: 4</span><br><span class="line">   AES-CBC   SHA256   SHA256   DH_GROUP_1536_MODP/Group 5</span><br><span class="line">IKEv2-PROTO-5: Construct Vendor Specific Payload: DELETE-REASONIKEv2-PROTO-5: Construct Vendor Specific Payload: (CUSTOM)IKEv2-PROTO-5: Construct Notify Payload: NAT_DETECTION_SOURCE_IPIKEv2-PROTO-5: Construct Notify Payload: NAT_DETECTION_DESTINATION_IPIKEv2-PROTO-5: Construct Vendor Specific Payload: FRAGMENTATIONIKEv2-PROTO-3: Tx [L 199.105.11.1:500/R 202.100.1.2:500/VRF i0:f0] m_id: 0x0</span><br><span class="line">IKEv2-PROTO-3: HDR[i:67CB9BFAD845A573 - r: 7C448002147E6C5F]</span><br><span class="line">IKEv2-PROTO-4: IKEV2 HDR ispi: 67CB9BFAD845A573 - rspi: 7C448002147E6C5F</span><br><span class="line">IKEv2-PROTO-4: Next payload: SA, version: 2.0</span><br><span class="line">IKEv2-PROTO-4: Exchange type: IKE_SA_INIT, flags: RESPONDER MSG-RESPONSE</span><br><span class="line">IKEv2-PROTO-4: Message id: 0x0, length: 458</span><br><span class="line">SA  Next payload: KE, reserved: 0x0, length: 48</span><br><span class="line">IKEv2-PROTO-4:   last proposal: 0x0, reserved: 0x0, length: 44</span><br><span class="line">  Proposal: 1, Protocol id: IKE, SPI size: 0, #trans: 4</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: SHA256</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA256</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x0, reserved: 0x0: length: 8</span><br><span class="line">    type: 4, reserved: 0x0, id: DH_GROUP_1536_MODP/Group 5</span><br><span class="line"></span><br><span class="line">KE  Next payload: N, reserved: 0x0, length: 200</span><br><span class="line">    DH group: 5, Reserved: 0x0</span><br><span class="line"></span><br><span class="line">     6f f0 84 8e b6 9d 00 9d e0 d2 91 ef f2 c1 1f fd</span><br><span class="line">     70 d2 a5 8b 25 3c de 31 e7 24 7b fb 8d af dd bb</span><br><span class="line">     5d 3d 61 30 05 98 69 f2 19 e7 e9 1a d8 61 a6 1d</span><br><span class="line">     44 1b 2b a7 6d 61 9b d4 9f 0c c5 00 4e f2 73 b2</span><br><span class="line">     cc 0e 4d 38 85 60 11 a8 36 66 3d ee 32 33 a6 70</span><br><span class="line">     65 98 b3 25 d3 d0 ff 36 db c6 9b c5 ca fd 11 4b</span><br><span class="line">     a1 0e 92 4c ed 36 56 2d 5e 42 84 7f 84 0f a9 96</span><br><span class="line">     2f f1 b7 76 00 b1 6f 05 30 92 2d db 9d 66 a4 0c</span><br><span class="line">     2c a7 7f e9 e6 9a c8 c2 73 01 ac 20 36 e7 2c a4</span><br><span class="line">     39 18 ea 83 99 50 94 4e 87 e3 25 7b 3a 11 e5 30</span><br><span class="line">     62 d4 79 68 8d 41 c5 27 ba 79 56 25 aa 0b b2 39</span><br><span class="line">     e3 40 6b 6d 3e 1f 0a 8e df 88 a3 7a a0 bd 65 e3</span><br><span class="line">N  Next payload: VID, reserved: 0x0, length: 24</span><br><span class="line"></span><br><span class="line">     4f 6f f8 dd 33 9a 39 9b fe 38 67 38 f7 6a e0 9d</span><br><span class="line">     8b d3 00 49</span><br><span class="line">VID  Next payload: VID, reserved: 0x0, length: 23</span><br><span class="line"></span><br><span class="line">     43 49 53 43 4f 2d 44 45 4c 45 54 45 2d 52 45 41</span><br><span class="line">     53 4f 4e</span><br><span class="line">VID  Next payload: NOTIFY, reserved: 0x0, length: 59</span><br><span class="line"></span><br><span class="line">     43 49 53 43 4f 28 43 4f 50 59 52 49 47 48 54 29</span><br><span class="line">     26 43 6f 70 79 72 69 67 68 74 20 28 63 29 20 32</span><br><span class="line">     30 30 39 20 43 69 73 63 6f 20 53 79 73 74 65 6d</span><br><span class="line">     73 2c 20 49 6e 63 2e</span><br><span class="line">NOTIFY(NAT_DETECTION_SOURCE_IP)  Next payload: NOTIFY, reserved: 0x0, length: 28</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NAT_DETECTION_SOURCE_IP</span><br><span class="line"></span><br><span class="line">     b8 46 6e 45 bd 6c 94 db fb d1 53 66 4e 92 f2 a7</span><br><span class="line">     06 d8 b5 ea</span><br><span class="line">NOTIFY(NAT_DETECTION_DESTINATION_IP)  Next payload: VID, reserved: 0x0, length: 28</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NAT_DETECTION_DESTINATION_IP</span><br><span class="line"></span><br><span class="line">     f4 98 56 5a ee 2a bb af ea b5 79 cd ad e5 3b 94</span><br><span class="line">     2a ce 61 27</span><br><span class="line">VID  Next payload: NONE, reserved: 0x0, length: 20</span><br><span class="line"></span><br><span class="line">     40 48 b7 d5 6e bc e8 85 25 e7 de 7f 00 d6 c2 d3</span><br><span class="line"></span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: INIT_DONE Event: EV_DONE</span><br><span class="line">IKEv2-PROTO-3: (5): Cisco DeleteReason Notify is enabled</span><br><span class="line">IKEv2-PROTO-3: (5): Complete SA init exchange</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: INIT_DONE Event: EV_CHK4_ROLE</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: INIT_DONE Event: EV_START_TMR</span><br><span class="line">IKEv2-PROTO-3: (5): Starting timer to wait for auth message (30 sec)</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000000 CurState: R_WAIT_AUTH Event: EV_NO_EVENT</span><br><span class="line">IKEv2-PROTO-3: Rx [L 199.105.11.1:500/R 202.100.1.2:500/VRF i0:f0] m_id: 0x1</span><br><span class="line">IKEv2-PROTO-3: HDR[i:67CB9BFAD845A573 - r: 7C448002147E6C5F]</span><br><span class="line">IKEv2-PROTO-4: IKEV2 HDR ispi: 67CB9BFAD845A573 - rspi: 7C448002147E6C5F</span><br><span class="line">IKEv2-PROTO-4: Next payload: ENCR, version: 2.0</span><br><span class="line">IKEv2-PROTO-4: Exchange type: IKE_AUTH, flags: INITIATOR</span><br><span class="line">IKEv2-PROTO-4: Message id: 0x1, length: 304</span><br><span class="line">IKEv2-PROTO-5: (5): Request has mess_id 1; expected 1 through 1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">REAL Decrypted packet:Data: 232 bytes</span><br><span class="line">IKEv2-PROTO-5: Parse Vendor Specific Payload: (CUSTOM) VID  Next payload: IDi, reserved: 0x0, length: 20</span><br><span class="line"></span><br><span class="line">     66 cb 9a fa cb 72 56 34 4f b6 0c 52 dd b3 bd 5b</span><br><span class="line">IDi  Next payload: AUTH, reserved: 0x0, length: 12</span><br><span class="line">    Id type: IPv4 address, Reserved: 0x0 0x0</span><br><span class="line"></span><br><span class="line">     ca 64 01 02</span><br><span class="line">AUTH  Next payload: SA, reserved: 0x0, length: 40</span><br><span class="line">    Auth method PSK, reserved: 0x0, reserved 0x0</span><br><span class="line">Auth data: 32 bytes</span><br><span class="line">SA  Next payload: TSi, reserved: 0x0, length: 44</span><br><span class="line">IKEv2-PROTO-4:   last proposal: 0x0, reserved: 0x0, length: 40</span><br><span class="line">  Proposal: 1, Protocol id: ESP, SPI size: 4, #trans: 3</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA96</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x0, reserved: 0x0: length: 8</span><br><span class="line">    type: 5, reserved: 0x0, id:</span><br><span class="line"></span><br><span class="line">TSi  Next payload: TSr, reserved: 0x0, length: 40</span><br><span class="line">    Num of TSs: 2, reserved 0x0, reserved 0x0</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 1, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 172.16.10.1, end addr: 172.16.10.1</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 0, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 172.16.10.0, end addr: 172.16.10.255</span><br><span class="line">TSr  Next payload: NOTIFY, reserved: 0x0, length: 40</span><br><span class="line">    Num of TSs: 2, reserved 0x0, reserved 0x0</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 1, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 192.168.10.4, end addr: 192.168.10.4</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 0, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 192.168.10.0, end addr: 192.168.10.255</span><br><span class="line">IKEv2-PROTO-5: Parse Notify Payload: INITIAL_CONTACT NOTIFY(INITIAL_CONTACT)  Next payload: NOTIFY, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: INITIAL_CONTACT</span><br><span class="line">IKEv2-PROTO-5: Parse Notify Payload: SET_WINDOW_SIZE NOTIFY(SET_WINDOW_SIZE)  Next payload: NOTIFY, reserved: 0x0, length: 12</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: SET_WINDOW_SIZE</span><br><span class="line"></span><br><span class="line">     00 00 00 05</span><br><span class="line">IKEv2-PROTO-5: Parse Notify Payload: ESP_TFC_NO_SUPPORT NOTIFY(ESP_TFC_NO_SUPPORT)  Next payload: NOTIFY, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: ESP_TFC_NO_SUPPORT</span><br><span class="line">IKEv2-PROTO-5: Parse Notify Payload: NON_FIRST_FRAGS NOTIFY(NON_FIRST_FRAGS)  Next payload: NONE, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NON_FIRST_FRAGS</span><br><span class="line"></span><br><span class="line">Decrypted packet:Data: 304 bytes</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_RECV_AUTH</span><br><span class="line">IKEv2-PROTO-3: (5): Stopping timer to wait for auth message</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_CHK_NAT_T</span><br><span class="line">IKEv2-PROTO-3: (5): Check NAT discovery</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_PROC_ID</span><br><span class="line">IKEv2-PROTO-2: (5): Recieved valid parameteres in process id</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_CHK_IF_PEER_CERT_NEEDS_TO_BE_FETCHED_FOR_PROF_SEL</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_GET_POLICY_BY_PEERID</span><br><span class="line">IKEv2-PROTO-3: (5): Getting configured policies</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_SET_POLICY</span><br><span class="line">IKEv2-PROTO-3: (5): Setting configured policies</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_VERIFY_POLICY_BY_PEERID</span><br><span class="line">IKEv2-PROTO-3: (5): Verify peer&apos;s policy</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_CHK_CONFIG_MODE</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_CHK_AUTH4EAP</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_WAIT_AUTH Event: EV_CHK_POLREQEAP</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_CHK_AUTH_TYPE</span><br><span class="line">IKEv2-PROTO-3: (5): Get peer authentication method</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_GET_PRESHR_KEY</span><br><span class="line">IKEv2-PROTO-3: (5): Get peer&apos;s preshared key for 202.100.1.2</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_VERIFY_AUTH</span><br><span class="line">IKEv2-PROTO-3: (5): Verify authentication data</span><br><span class="line">IKEv2-PROTO-3: (5): Use preshared key for id 202.100.1.2, key len 5</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_GET_CONFIG_MODE</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_CHK4_IC</span><br><span class="line">IKEv2-PROTO-3: (5): Processing initial contact</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_CHK_REDIRECT</span><br><span class="line">IKEv2-PROTO-5: (5): Redirect check is not needed, skipping it</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_PROC_SA_TS</span><br><span class="line">IKEv2-PROTO-2: (5): Processing auth message</span><br><span class="line">IKEv2-PROTO-3: (5):</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_NO_EVENT</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_VERIFY_AUTH Event: EV_OK_RECD_IPSEC_RESP</span><br><span class="line">IKEv2-PROTO-2: (5): Processing auth message</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_BLD_AUTH Event: EV_MY_AUTH_METHOD</span><br><span class="line">IKEv2-PROTO-3: (5): Get my authentication method</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_BLD_AUTH Event: EV_GET_PRESHR_KEY</span><br><span class="line">IKEv2-PROTO-3: (5): Get peer&apos;s preshared key for 202.100.1.2</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_BLD_AUTH Event: EV_GEN_AUTH</span><br><span class="line">IKEv2-PROTO-3: (5): Generate my authentication data</span><br><span class="line">IKEv2-PROTO-3: (5): Use preshared key for id 199.105.11.1, key len 5</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_BLD_AUTH Event: EV_CHK4_SIGN</span><br><span class="line">IKEv2-PROTO-3: (5): Get my authentication method</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_BLD_AUTH Event: EV_OK_AUTH_GEN</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: R_BLD_AUTH Event: EV_SEND_AUTH</span><br><span class="line">IKEv2-PROTO-2: (5): Sending auth message</span><br><span class="line">IKEv2-PROTO-5: Construct Vendor Specific Payload: CISCO-GRANITEIKEv2-PROTO-3:   ESP Proposal: 1, SPI size: 4 (IPSec negotiation),</span><br><span class="line">Num. transforms: 3</span><br><span class="line">   AES-CBC   SHA96  </span><br><span class="line">IKEv2-PROTO-5: Construct Notify Payload: ESP_TFC_NO_SUPPORTIKEv2-PROTO-5: Construct Notify Payload: NON_FIRST_FRAGSIKEv2-PROTO-3: (5): Building packet for encryption; contents are:</span><br><span class="line">VID  Next payload: IDr, reserved: 0x0, length: 20</span><br><span class="line"></span><br><span class="line">     7e 44 81 02 07 49 9f 18 4f b6 0c 52 dd b3 bd 5b</span><br><span class="line">IDr  Next payload: AUTH, reserved: 0x0, length: 12</span><br><span class="line">    Id type: IPv4 address, Reserved: 0x0 0x0</span><br><span class="line"></span><br><span class="line">     c7 69 0b 01</span><br><span class="line">AUTH  Next payload: SA, reserved: 0x0, length: 40</span><br><span class="line">    Auth method PSK, reserved: 0x0, reserved 0x0</span><br><span class="line">Auth data: 32 bytes</span><br><span class="line">SA  Next payload: TSi, reserved: 0x0, length: 44</span><br><span class="line">IKEv2-PROTO-4:   last proposal: 0x0, reserved: 0x0, length: 40</span><br><span class="line">  Proposal: 1, Protocol id: ESP, SPI size: 4, #trans: 3</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA96</span><br><span class="line">IKEv2-PROTO-4:     last transform: 0x0, reserved: 0x0: length: 8</span><br><span class="line">    type: 5, reserved: 0x0, id:</span><br><span class="line"></span><br><span class="line">TSi  Next payload: TSr, reserved: 0x0, length: 24</span><br><span class="line">    Num of TSs: 1, reserved 0x0, reserved 0x0</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 0, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 172.16.10.0, end addr: 172.16.10.255</span><br><span class="line">TSr  Next payload: NOTIFY, reserved: 0x0, length: 24</span><br><span class="line">    Num of TSs: 1, reserved 0x0, reserved 0x0</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 0, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 192.168.10.0, end addr: 192.168.10.255</span><br><span class="line">NOTIFY(ESP_TFC_NO_SUPPORT)  Next payload: NOTIFY, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: ESP_TFC_NO_SUPPORT</span><br><span class="line">NOTIFY(NON_FIRST_FRAGS)  Next payload: NONE, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NON_FIRST_FRAGS</span><br><span class="line"></span><br><span class="line">IKEv2-PROTO-3: Tx [L 199.105.11.1:500/R 202.100.1.2:500/VRF i0:f0] m_id: 0x1</span><br><span class="line">IKEv2-PROTO-3: HDR[i:67CB9BFAD845A573 - r: 7C448002147E6C5F]</span><br><span class="line">IKEv2-PROTO-4: IKEV2 HDR ispi: 67CB9BFAD845A573 - rspi: 7C448002147E6C5F</span><br><span class="line">IKEv2-PROTO-4: Next payload: ENCR, version: 2.0</span><br><span class="line">IKEv2-PROTO-4: Exchange type: IKE_AUTH, flags: RESPONDER MSG-RESPONSE</span><br><span class="line">IKEv2-PROTO-4: Message id: 0x1, length: 256</span><br><span class="line">ENCR  Next payload: VID, reserved: 0x0, length: 228</span><br><span class="line">Encrypted data: 224 bytes</span><br><span class="line"></span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_OK</span><br><span class="line">IKEv2-PROTO-5: (5): Action: Action_Null</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_PKI_SESH_CLOSE</span><br><span class="line">IKEv2-PROTO-3: (5): Closing the PKI session</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_INSERT_IKE</span><br><span class="line">IKEv2-PROTO-2: (5): SA created; inserting SA into database</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_REGISTER_SESSION</span><br><span class="line">IKEv2-PROTO-3: (5):</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_NO_EVENT</span><br><span class="line">IKEv2-PROTO-3: (5): Initializing DPD, configured for 10 seconds</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_RECD_REGISTER_SESSION_RESP</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_GEN_LOAD_IPSEC</span><br><span class="line">IKEv2-PROTO-3: (5): Load IPSEC key material</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_START_ACCT</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_CHECK_DUPE</span><br><span class="line">IKEv2-PROTO-3: (5): Checking for duplicate SA</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: AUTH_DONE Event: EV_CHK4_ROLE</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: READY Event: EV_R_UPDATE_CAC_STATS</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: READY Event: EV_R_OK</span><br><span class="line">IKEv2-PROTO-3: (5): Starting timer to delete negotiation context</span><br><span class="line">IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: READY Event: EV_NO_EVENT</span><br><span class="line"></span><br><span class="line">ASA842# IKEv2-PROTO-5: (5): SM Trace-&gt; SA: I_SPI=67CB9BFAD845A573 R_SPI=7C448002147E6C5F (R) MsgID = 00000001 CurState: READY Event: EV_DEL_NEG_TMO</span><br><span class="line">IKEv2-PROTO-5: (5): Deleting negotiation context for peer message ID: 0x1</span><br><span class="line">nodebug crypto ikev2 protocol 127</span><br><span class="line">ASA842# no debug crypto ikev2 protocol 127</span><br></pre></td></tr></table></figure>
+<h2 id="测试的R2-Debug信息"><a href="#测试的R2-Debug信息" class="headerlink" title="测试的R2 Debug信息"></a>测试的R2 Debug信息</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">R2#debug crypto ikev2 packet</span><br><span class="line">IKEv2 packet debugging is on</span><br><span class="line">R2#clear crypto ikev2 sa    </span><br><span class="line">R2#</span><br><span class="line">Payload contents:</span><br><span class="line">DELETE  Next payload: NOTIFY, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, num of spi: 0</span><br><span class="line">NOTIFY(DELETE_REASON)  Next payload: NONE, reserved: 0x0, length: 14</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: DELETE_REASON</span><br><span class="line"></span><br><span class="line">*Jun 25 10:02:57.364: IKEv2-PAK:(SESSION ID = 1,SA ID = 1):Next payload: ENCR, version: 2.0 Exchange type: INFORMATIONAL, flags: INITIATOR Message id: 2, length: 92</span><br><span class="line">Payload contents:</span><br><span class="line">ENCR  Next payload: DELETE, reserved: 0x0, length: 64</span><br><span class="line"></span><br><span class="line">*Jun 25 10:02:57.365: IKEv2-PAK:(SESSION ID = 1,SA ID = 1):Next payload: ENCR, version: 2.0 Exchange type: INFORMATIONAL, flags: RESPONDER MSG-RESPONSE</span><br><span class="line">R2#Message id: 2, length: 76</span><br><span class="line">Payload contents:</span><br><span class="line">DELETE  Next payload: NONE, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, num of spi: 0</span><br><span class="line"></span><br><span class="line">R2#</span><br><span class="line">*Jun 25 10:03:03.541: IKEv2-PAK:(SESSION ID = 1,SA ID = 1):Next payload: SA, version: 2.0 Exchange type: IKE_SA_INIT, flags: INITIATOR Message id: 0, length: 368</span><br><span class="line">Payload contents:</span><br><span class="line">SA  Next payload: KE, reserved: 0x0, length: 112</span><br><span class="line">  last proposal: 0x0, reserved: 0x0, length: 108</span><br><span class="line">  Proposal: 1, Protocol id: IKE, SPI size: 0, #trans: 11    last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: SHA1</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: SHA256</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA96</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA256</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 4, reserved: 0x0, id: DH_GROUP_768_MODP/Group 1</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 4, reserved: 0x0, id: DH_GROUP_1024_MODP/Group 2</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 4, reserved: 0x0, id: DH_GROUP_1536_MODP/Group 5</span><br><span class="line">    last transform: 0x0, reserved: 0x0: length: 8</span><br><span class="line">    type: 4, reserved: 0x0, id: DH_GROUP_2048_MODP/Group 14</span><br><span class="line">KE  Next payload: N, reserved: 0x0, length: 104</span><br><span class="line">    DH group: 1, Reserved: 0x0</span><br><span class="line">N  Next payload: VID, reserved: 0x0, length: 24</span><br><span class="line">VID  Next payload: VID, reserved: 0x0, length: 23</span><br><span class="line">VID  Next payload: NOTIFY, reserved: 0x0, length: 21</span><br><span class="line">NOTIFY(NAT_DETECTION_SOURCE_IP)  Next payload: NOTIFY, reserved: 0x0, length: 28</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NAT_DETECTION_SOURCE_IP</span><br><span class="line">NOTIFY(NAT_DETECTION_DESTINATION_IP)  Next payload: NONE, reserved: 0x0, length: 28</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NAT_DETECTION_DESTINATION_IP</span><br><span class="line"></span><br><span class="line">*Jun 25 10:03:03.547: IKEv2-PAK:(SESSION ID = 1,SA ID = 1):Next payload: SA, version: 2.0 Exchange type: IKE_SA_INIT, flags: RESPONDER MSG-RESPONSE Message id: 0, length: 362</span><br><span class="line">Payload contents:</span><br><span class="line">SA  Next payload: KE, reserved: 0x0, length: 48</span><br><span class="line">  last proposal: 0x0, reserved: 0x0, length: 44</span><br><span class="line">  Proposal: 1, Protocol id: IKE, SPI size: 0, #trans: 4    last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 2, reserved: 0x0, id: SHA1</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA96</span><br><span class="line">    last transform: 0x0, reserved: 0x0: length: 8</span><br><span class="line">    type: 4, reserved: 0x0, id: DH_GROUP_768_MODP/Group 1</span><br><span class="line">KE  Next payload: N, reserved: 0x0, length: 104</span><br><span class="line">    DH group: 1, Reserved: 0x0</span><br><span class="line">N  Next payload: VID, reserved: 0x0, length: 24</span><br><span class="line">VID  Next payload: VID, reserved: 0x0, length: 23</span><br><span class="line">VID  Next payload: NOTIFY, reserved: 0x0, length: 59</span><br><span class="line">NOTIFY(NAT_DETECTION_SOURCE_IP)  Next payload: NOTIFY, reserved: 0x0, length: 28</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NAT_DETECTION_SOURCE_IP</span><br><span class="line">NOTIFY(NAT_DETECTION_DESTINATION_IP)  Next payload: VID, reserved: 0x0, length: 28</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NAT_DETECTION_DESTINATION_IP</span><br><span class="line">VID  Next payload: NONE, reserved: 0x0, length: 20</span><br><span class="line"></span><br><span class="line">Payload contents:</span><br><span class="line">VID  Next payload: IDi, reserved: 0x0, length: 20</span><br><span class="line">IDi  Next payload: AUTH, reserved: 0x0, length: 12</span><br><span class="line">    Id type: IPv4 address, Reserved: 0x0 0x0</span><br><span class="line">AUTH  Next payload: SA, reserved: 0x0, length: 28</span><br><span class="line">    Auth method PSK, reserved: 0x0, reserved 0x0</span><br><span class="line">SA  Next payload: TSi, reserved: 0x0, length: 44</span><br><span class="line">  last proposal: 0x0, reserved: 0x0, length: 40</span><br><span class="line">  Proposal: 1, Protocol id: ESP, SPI size: 4, #trans: 3    last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA96</span><br><span class="line">    last transform: 0x0, reserved: 0x0: length: 8</span><br><span class="line">    type: 5, reserved: 0x0, id: Don&apos;t use ESN</span><br><span class="line">TSi  Next payload: TSr, reserved: 0x0, length: 40</span><br><span class="line">    Num of TSs: 2, reserved 0x0, reserved 0x0</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 1, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 172.16.10.1, end addr: 172.16.10.1</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 0, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 172.16.10.0, end addr: 172.16.10.255</span><br><span class="line">TSr  Next payload: NOTIFY, reserved: 0x0, length: 40</span><br><span class="line">    Num of TSs: 2, reserved 0x0, reserved 0x0</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 1, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 192.168.10.4, end addr: 192.168.10.4</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 0, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 192.168.10.0, end addr: 192.168.10.255</span><br><span class="line">NOTIFY(INITIAL_CONTACT)  Next payload: NOTIFY, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: INITIAL_CONTACT</span><br><span class="line">NOTIFY(SET_WINDOW_SIZE)  Next payload: NOTIFY, reserved: 0x0, length: 12</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: SET_WINDOW_SIZE</span><br><span class="line">NOTIFY(ESP_TFC_NO_SUPPORT)  Next payload: NOTIFY, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: ESP_TFC_NO_SUPPORT</span><br><span class="line">NOTIFY(NON_FIRST_FRAGS)  Next payload: NONE, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NON_FIRST_FRAGS</span><br><span class="line"></span><br><span class="line">*Jun 25 10:03:03.552: IKEv2-PAK:(SESSION ID = 1,SA ID = 1):Next payload: ENCR, version: 2.0 Exchange type: IKE_AUTH, flags: INITIATOR Message id: 1, length: 284</span><br><span class="line">Payload contents:</span><br><span class="line">ENCR  Next payload: VID, reserved: 0x0, length: 256</span><br><span class="line"></span><br><span class="line">*Jun 25 10:03:03.556: IKEv2-PAK:(SESSION ID = 1,SA ID = 1):Next payload: ENCR, version: 2.0 Exchange type: IKE_AUTH, flags: RESPONDER MSG-RESPONSE Message id: 1, length: 236</span><br><span class="line">Payload contents:</span><br><span class="line">VID  Next payload: IDr, reserved: 0x0, length: 20</span><br><span class="line">IDr  Next payload: AUTH, reserved: 0x0, length: 12</span><br><span class="line">    Id type: IPv4 address, Reserved: 0x0 0x0</span><br><span class="line">AUTH  Next payload: SA, reserved: 0x0, length: 28</span><br><span class="line">    Auth method PSK, reserved: 0x0, reserved 0x0</span><br><span class="line">SA  Next payload: TSi, reserved: 0x0, length: 44</span><br><span class="line">  last proposal: 0x0, reserved: 0x0, length: 40</span><br><span class="line">  Proposal: 1, Protocol id: ESP, SPI size: 4, #trans: 3    last transform: 0x3, reserved: 0x0: length: 12</span><br><span class="line">    type: 1, reserved: 0x0, id: AES-CBC</span><br><span class="line">    last transform: 0x3, reserved: 0x0: length: 8</span><br><span class="line">    type: 3, reserved: 0x0, id: SHA96</span><br><span class="line">    last transform: 0x0, reserved: 0x0: length: 8</span><br><span class="line">    type: 5, reserved: 0x0, id: Don&apos;t use ESN</span><br><span class="line">TSi  Next payload: TSr, reserved: 0x0, length: 24</span><br><span class="line">    Num of TSs: 1, reserved 0x0, reserved 0x0</span><br><span class="line"></span><br><span class="line">R2#    TS type: TS_IPV4_ADDR_RANGE, proto id: 0, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 172.16.10.0, end addr: 172.16.10.255</span><br><span class="line">TSr  Next payload: NOTIFY, reserved: 0x0, length: 24</span><br><span class="line">    Num of TSs: 1, reserved 0x0, reserved 0x0</span><br><span class="line">    TS type: TS_IPV4_ADDR_RANGE, proto id: 0, length: 16</span><br><span class="line">    start port: 0, end port: 65535</span><br><span class="line">    start addr: 192.168.10.0, end addr: 192.168.10.255</span><br><span class="line">NOTIFY(ESP_TFC_NO_SUPPORT)  Next payload: NOTIFY, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: ESP_TFC_NO_SUPPORT</span><br><span class="line">NOTIFY(NON_FIRST_FRAGS)  Next payload: NONE, reserved: 0x0, length: 8</span><br><span class="line">    Security protocol id: IKE, spi size: 0, type: NON_FIRST_FRAGS</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ikev2/" rel="tag"># ikev2</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/24/2018-Kali可用国内源更新sources-list/" rel="next" title="2018 Kali可用国内源更新sources.list">
+                <i class="fa fa-chevron-left"></i> 2018 Kali可用国内源更新sources.list
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://i.imgur.com/VRLrl1E.jpg" alt="Karl Li">
+            
+              <p class="site-author-name" itemprop="name">Karl Li</p>
+              <p class="site-description motion-element" itemprop="description">美妙人生的关键在于你迷上什么东西</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#R2"><span class="nav-number">1.</span> <span class="nav-text">R2:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASA："><span class="nav-number">2.</span> <span class="nav-text">ASA：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R2-1"><span class="nav-number">3.</span> <span class="nav-text">R2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASA"><span class="nav-number">4.</span> <span class="nav-text">ASA</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#异步密钥认证"><span class="nav-number"></span> <span class="nav-text">异步密钥认证</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#R2-2"><span class="nav-number">1.</span> <span class="nav-text">R2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASA-1"><span class="nav-number">2.</span> <span class="nav-text">ASA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试的ASADebug信息"><span class="nav-number">3.</span> <span class="nav-text">测试的ASADebug信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试的R2-Debug信息"><span class="nav-number">4.</span> <span class="nav-text">测试的R2 Debug信息</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Karl Li</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
