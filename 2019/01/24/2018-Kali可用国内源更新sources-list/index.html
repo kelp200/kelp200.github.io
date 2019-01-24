@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="kali,">
 
 
 
@@ -79,19 +79,18 @@
 
 
 
-<meta name="description" content="一、拓扑图： 二、配置说明：">
+<meta name="description" content="##中科大deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contribdeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib ##阿里云deb http://mirrors.aliyun.com/kali kali-rolli">
+<meta name="keywords" content="kali">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PBR的简单配置">
-<meta property="og:url" content="http://yoursite.com/2019/01/23/PBR路由选择的操作/index.html">
+<meta property="og:title" content="2018 Kali可用国内源更新sources.list">
+<meta property="og:url" content="http://yoursite.com/2019/01/24/2018-Kali可用国内源更新sources-list/index.html">
 <meta property="og:site_name" content="简">
-<meta property="og:description" content="一、拓扑图： 二、配置说明：">
+<meta property="og:description" content="##中科大deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contribdeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib ##阿里云deb http://mirrors.aliyun.com/kali kali-rolli">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.imgur.com/lDuWqmC.jpg">
-<meta property="og:updated_time" content="2019-01-23T14:55:14.641Z">
+<meta property="og:updated_time" content="2019-01-24T06:18:39.671Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PBR的简单配置">
-<meta name="twitter:description" content="一、拓扑图： 二、配置说明：">
-<meta name="twitter:image" content="https://i.imgur.com/lDuWqmC.jpg">
+<meta name="twitter:title" content="2018 Kali可用国内源更新sources.list">
+<meta name="twitter:description" content="##中科大deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contribdeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib ##阿里云deb http://mirrors.aliyun.com/kali kali-rolli">
 
 
 
@@ -121,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/01/23/PBR路由选择的操作/">
+  <link rel="canonical" href="http://yoursite.com/2019/01/24/2018-Kali可用国内源更新sources-list/">
 
 
 
 
 
-  <title>PBR的简单配置 | 简</title>
+  <title>2018 Kali可用国内源更新sources.list | 简</title>
   
 
 
@@ -234,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/23/PBR路由选择的操作/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/24/2018-Kali可用国内源更新sources-list/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
@@ -251,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PBR的简单配置</h1>
+          <h1 class="post-title" itemprop="name headline">2018 Kali可用国内源更新sources.list</h1>
         
 
         <div class="post-meta">
@@ -263,8 +262,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-23T13:41:31+08:00">
-                2019-01-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T14:16:55+08:00">
+                2019-01-24
               </time>
             
 
@@ -301,26 +300,24 @@
       
 
       
-        <p>一、拓扑图：<br><img src="https://i.imgur.com/lDuWqmC.jpg" alt=""></p>
-<p>二、配置说明：<br><a id="more"></a><br>1、根据拓扑图的配置，R4上面跑OSPF，下面走静态路由，R5和R6走默认路由上去。但是要注意的一点是R4上要加一条命令：default-information originate always (向OSPF区域通知一条默认路由，并且要加always,因为在R4上我们没有默认路由，之前我说在R4上只做了一条静态路由到R5和R6。)<br>2、在保证所有的链路都能通全网之后。我现在在R4上做策略路由：让192.168.45.0能在设置的策略路由上走:<br>A:192.168.45.0/24上的所有路由器——–àR2—-àR1——-1.1.1.1/24<br>B:192.168.46.0/24上的所有路由器——–àR3—-àR1——-1.1.1.1/24<br>3、下面来配置一下route-map<br>R4(config)#access-list 1 permit 192.168.45.0 0.0.0.255 (建立左边的access-list)<br>R4(config)#access-list 1 permit 5.5.5.0. 0.0.0.255<br>R4(config)#access-list 2 permit 192.168.46.0 0. 0.0.0.255 (建立右边的access-list)<br>R4(config)#access-list 2 permit 6.6.6.0. 0.0.0.255</p>
-<p>R4(config)#route-map pbr1 permit 1 (建立一个route-map名为pbr1)<br>R4(config-route-map)#match policy-list pbr1（匹配策略列表pbr1）或者用match ip add 1<br>R4(config-route-map)#set ip next-hop 192.168.24.2（设置下一跳走192.168.24.2）<br>R4(config)#int s0/2(进入R4的S0/2)<br>R4(config-if)#ip policy route-map pbr1(把之前建立的pbr1挂上去)</p>
-<p>R4(config)#route-map pbr2 permit 2(再建立个route-map 名为pbr2)<br>R4(config-route-map)#match policy-list pbr2 (匹配策略列表pbr2)<br>R4(config-route-map)#set ip next-hop 192.168.34.3(pbr2我设置为走192.168.34.3)<br>R4(config)#int s0/3(进入R4的S0/3)<br>R4(config-if)#ip policy route-map pbr2(把之前建立的pbr2挂上去)</p>
-<p>4、下面在R5上traceroute 1.1.1.1 看一下是不是走我们设定的策略：<br>R5#traceroute 1.1.1.1</p>
-<p>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.45.4 56 msec 36 msec 8 msec<br>  2 192.168.24.2 84 msec 40 msec 56 msec<br>  3 192.168.12.1 112 msec *  132 msec     （对，没错！）</p>
-<p>再看一下R6：<br>R6#traceroute 1.1.1.1</p>
-<p>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.46.4 56 msec 56 msec 24 msec<br>  2 192.168.34.3 52 msec 64 msec 52 msec<br>  3 192.168.13.1 116 msec *  148 msec   （也没错！）</p>
-<p>5、在R4上show route-map 看一下包的情况，都增加了成6 ,ping 的话默认为5：<br>R4#show route-map<br>route-map pbr1, permit, sequence 1<br>  Match clauses:<br>    IP Policy lists:<br>        pbr1<br>  Set clauses:<br>    ip next-hop 192.168.24.2<br>  Policy routing matches: 6 packets, 576 bytes<br>route-map pbr2, permit, sequence 2<br>  Match clauses:<br>    IP Policy lists:<br>        pbr2<br>  Set clauses:<br>    ip next-hop 192.168.34.3<br>  Policy routing matches: 6 packets, 1652 bytes<br>R4#</p>
-<p>6、但是我们现在在R4上去traceroute 看一下：<br>R4#traceroute 1.1.1.1</p>
-<p>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.34.3 64 msec<br>    192.168.24.2 76 msec<br>    192.168.34.3 8 msec<br>  2 192.168.12.1 88 msec<br>    192.168.13.1 88 msec *<br>R4#<br>发现是两边走，那么是什么原因呢？因为我们没有在R4上去做,这就涉及到本地的概念。没有对本地接口生效，之前分明是定义了45.0网段，但45.4这个接口却不能生效。<br>7、我们的解决办法是，在R4上加两条命令去应用pbr1和pbr2<br>R4(config)#ip local policy route-map  pbr1<br>R4(config)#ip local policy route-map  pbr2<br>这其中要注意，如果我只应用pbr1，那么在R4上traceroute 1.1.1.1 的话，它只会走左边，不会去走右边链路到1.1.1.1 所以我们要定义把pbr2也应用上去。这也是匹配了前面定义的route-map。<br>8、下面再来扩展traceroute 看一下效果：<br>R4#traceroute ip</p>
-<p>Target IP address: 1.1.1.1<br>Source address: 192.168.24.4<br>Numeric display [n]:<br>Timeout in seconds [3]:<br>Probe count [3]:<br>Minimum Time to Live [1]:<br>Maximum Time to Live [30]:<br>Port Number [33434]:<br>Loose, Strict, Record, Timestamp, Verbose[none]:<br>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.24.2 32 msec 56 msec 20 msec<br>  2 192.168.12.1 88 msec *  92 msec</p>
-<p>R4#traceroute ip</p>
-<p>Target IP address: 1.1.1.1<br>Source address: 192.168.34.4<br>Numeric display [n]:<br>Timeout in seconds [3]:<br>Probe count [3]:<br>Minimum Time to Live [1]:<br>Maximum Time to Live [30]:<br>Port Number [33434]:<br>Loose, Strict, Record, Timestamp, Verbose[none]:<br>Type escape sequence to abort.<br>Tracing the route to 1.1.1.1</p>
-<p>  1 192.168.34.3 56 msec 56 msec 24 msec<br>  2 192.168.13.1 92 msec *  92 msec</p>
-<p>OK。<br>通过route-map来配置，都能够按照我设置的策略路由来走。</p>
+        <p>##中科大<br>deb <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib</p>
+<p>##阿里云<br>deb <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib<br><a id="more"></a><br>deb-src <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib</p>
+<p>##清华大学<br>deb <a href="http://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="https://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free</p>
+<p>##浙大<br>deb <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free</p>
+<p>##东软大学<br>deb <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib<br>deb-src <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib</p>
+<p>##官方源<br>deb <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib</p>
+<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
+<p>apt-get clean #删除以下载的包</p>
+<p>reboot #重新启动</p>
+<p>这样应该就没问题了</p>
+<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录<br>changelog – 下载指定软件包，并显示其changelog</p>
+<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
+<p>apt-get clean #删除以下载的包</p>
+<p>reboot #重新启动</p>
+<p>这样应该就没问题了</p>
+<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录</p>
+<p>changelog – 下载指定软件包，并显示其changelog</p>
+<p>原文地址：<a href="https://www.cnblogs.com/kinome/p/8533390.html" target="_blank" rel="noopener">https://www.cnblogs.com/kinome/p/8533390.html</a></p>
 
       
     </div>
@@ -336,6 +333,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/kali/" rel="tag"># kali</a>
+          
+        </div>
+      
 
       
       
@@ -345,8 +348,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/22/ASA的升级过程/" rel="next" title="kali">
-                <i class="fa fa-chevron-left"></i> kali
+              <a href="/2019/01/23/Cisco-ASA密码恢复操作-寄存值修改/" rel="next" title="Cisco ASA密码恢复操作 寄存值修改">
+                <i class="fa fa-chevron-left"></i> Cisco ASA密码恢复操作 寄存值修改
               </a>
             
           </div>
@@ -354,10 +357,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/01/23/Linux-操作系统的安装/" rel="prev" title="Linux 操作系统的安装">
-                Linux 操作系统的安装 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
