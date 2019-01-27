@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="VPN,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="说明：R3为证书服务器，为R2,R4颁发证书。R2与R4建立SVTI VPN。 R2,R4,R5,R6运行ospf协议. 一：双证书认证开始取得根证书，通过认证根证书服务器crypto pki authenticate CA取得个人证书crypto pki enroll CA R2:———————————————————————–1234567891011121314151617181920212">
+<meta name="keywords" content="VPN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IOS&amp;IOS ikev2 双证书+证书&amp;共享密钥">
+<meta property="og:url" content="http://yoursite.com/2019/01/27/IOS-IOS-ikev2-双证书-证书-共享密钥/index.html">
+<meta property="og:site_name" content="简">
+<meta property="og:description" content="说明：R3为证书服务器，为R2,R4颁发证书。R2与R4建立SVTI VPN。 R2,R4,R5,R6运行ospf协议. 一：双证书认证开始取得根证书，通过认证根证书服务器crypto pki authenticate CA取得个人证书crypto pki enroll CA R2:———————————————————————–1234567891011121314151617181920212">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/GuqdIVR.png">
+<meta property="og:image" content="https://i.imgur.com/tRnerpd.png">
+<meta property="og:updated_time" content="2019-01-27T14:01:29.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IOS&amp;IOS ikev2 双证书+证书&amp;共享密钥">
+<meta name="twitter:description" content="说明：R3为证书服务器，为R2,R4颁发证书。R2与R4建立SVTI VPN。 R2,R4,R5,R6运行ospf协议. 一：双证书认证开始取得根证书，通过认证根证书服务器crypto pki authenticate CA取得个人证书crypto pki enroll CA R2:———————————————————————–1234567891011121314151617181920212">
+<meta name="twitter:image" content="https://i.imgur.com/GuqdIVR.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/27/IOS-IOS-ikev2-双证书-证书-共享密钥/">
+
+
+
+
+
+  <title>IOS&IOS ikev2 双证书+证书&共享密钥 | 简</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            目录
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/27/IOS-IOS-ikev2-双证书-证书-共享密钥/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Karl Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">IOS&IOS ikev2 双证书+证书&共享密钥</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-27T21:46:02+08:00">
+                2019-01-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://i.imgur.com/GuqdIVR.png" alt=""><br>说明：<br>R3为证书服务器，为R2,R4颁发证书。R2与R4建立SVTI VPN。 R2,R4,R5,R6运行ospf协议.</p>
+<h1 id="一：双证书认证"><a href="#一：双证书认证" class="headerlink" title="一：双证书认证"></a>一：双证书认证</h1><p>开始取得根证书，通过认证根证书服务器<br>crypto pki authenticate CA<br>取得个人证书<br>crypto pki enroll CA</p>
+<h2 id="R2-———————————————————————–"><a href="#R2-———————————————————————–" class="headerlink" title="R2:———————————————————————–"></a>R2:———————————————————————–</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br></pre></td><td class="code"><pre><span class="line">R2#sh running-config</span><br><span class="line">Building configuration...</span><br><span class="line"></span><br><span class="line">Current configuration : 4610 bytes</span><br><span class="line">!</span><br><span class="line">! Last configuration change at 21:02:03 CST Mon Jun 26 2017</span><br><span class="line">!</span><br><span class="line">version 15.5</span><br><span class="line">service timestamps debug datetime msec</span><br><span class="line">service timestamps log datetime msec</span><br><span class="line">no service password-encryption</span><br><span class="line">!</span><br><span class="line">hostname R2</span><br><span class="line">!</span><br><span class="line">boot-start-marker</span><br><span class="line">boot-end-marker</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no aaa new-model</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">bsd-client server url https://cloudsso.cisco.com/as/token.oauth2</span><br><span class="line">clock timezone CST 8 0</span><br><span class="line">mmi polling-interval 60</span><br><span class="line">no mmi auto-configure</span><br><span class="line">no mmi pvc</span><br><span class="line">mmi snmp-timeout 180</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip icmp rate-limit unreachable</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">no ip domain lookup</span><br><span class="line">ip domain name kelp200.com                    建立加上R3的domain name</span><br><span class="line">ip cef</span><br><span class="line">no ipv6 cef</span><br><span class="line">!</span><br><span class="line">multilink bundle-name authenticated</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">cts logging verbose</span><br><span class="line">!</span><br><span class="line">crypto pki trustpoint CA</span><br><span class="line">    enrollment url http://202.100.1.254:80                 证书服务器地址</span><br><span class="line">    subject-name cn=R2.kelp200.com, ou=yfjcinfo</span><br><span class="line">    revocation-check crl                                   可有可无</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto pki certificate map CERTMAP 10                      证书认证的map</span><br><span class="line">    subject-name co ou = yfjcinfo                          包含ou=yfjcinfo的匹配认证</span><br><span class="line">!</span><br><span class="line">crypto pki certificate chain CA</span><br><span class="line">certificate 02</span><br><span class="line">  308201FE 30820167 A0030201 02020102 300D0609 2A864886 F70D0101 05050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313234</span><br><span class="line">  3232355A 170D3138 30363236 31323432 32355A30 4B311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 31173015 06035504 03130E52 322E6B65 6C703230 302E636F</span><br><span class="line">  6D311D30 1B06092A 864886F7 0D010902 160E5232 2E6B656C 70323030 2E636F6D</span><br><span class="line">  305C300D 06092A86 4886F70D 01010105 00034B00 30480241 00D3FA76 9F9E65A9</span><br><span class="line">  CE21D71F A30F420A C28293E7 B0757631 F3D73CD1 7DC61FF2 BAA16B12 9CA15005</span><br><span class="line">  8D903451 BB16F494 F2C6DD03 262AA363 C971BD9C 73EFD335 3F020301 0001A34F</span><br><span class="line">  304D300B 0603551D 0F040403 0205A030 1F060355 1D230418 30168014 6A67EB51</span><br><span class="line">  B2C7AABF 3B950E86 50F219D9 8620F969 301D0603 551D0E04 16041474 6C9D7118</span><br><span class="line">  CEFA38AB AD9CAAED CC9EFF76 85B20F30 0D06092A 864886F7 0D010105 05000381</span><br><span class="line">  810028D7 872AD6F1 9BF30B58 A39B8BEA 827917AD 9A39FBFE 0DB7AA36 A4429002</span><br><span class="line">  84DB9820 F7DCC160 63DA22C2 7AEA5A3C 1176F4B1 4CF95542 97938C49 578679A0</span><br><span class="line">  553D5E47 16BCB72E 21D4F192 1B80AD31 1F961B57 A250B0DB 4CD458DB 9DB0A862</span><br><span class="line">  77DE8EDB A283D8FF B3005434 24BE45EE 3F2F038D 1AA5480F 09217248 E63FBD4E 5204</span><br><span class="line">        quit</span><br><span class="line">certificate ca 01</span><br><span class="line">  3082023D 308201A6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313233</span><br><span class="line">  3832355A 170D3230 30363235 31323338 32355A30 32311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 311D301B 06035504 03131449 6E746572 6E65742E 6B656C70</span><br><span class="line">  3230302E 636F6D30 819F300D 06092A86 4886F70D 01010105 0003818D 00308189</span><br><span class="line">  02818100 C4B5FE1B 386F3CDD BC591040 52A559F4 D007F57D 21899A2E 73F158D8</span><br><span class="line">  62FCCF96 B24A576D 22FDF168 5BC5F428 3EFA3D6A BF94CDBC C5351965 C6387534</span><br><span class="line">  C36784CA AA540DC0 B9F8D8BE E531AED5 D7DFC131 D389558B C5279E52 3E6A819D</span><br><span class="line">  71C8153F 5C2CD062 37A9F020 969A7717 5BC54C56 8BDD9B30 7D3DAC2B CA4FD6E0</span><br><span class="line">  8422C817 02030100 01A36330 61300F06 03551D13 0101FF04 05300301 01FF300E</span><br><span class="line">  0603551D 0F0101FF 04040302 0186301F 0603551D 23041830 1680146A 67EB51B2</span><br><span class="line">  C7AABF3B 950E8650 F219D986 20F96930 1D060355 1D0E0416 04146A67 EB51B2C7</span><br><span class="line">  AABF3B95 0E8650F2 19D98620 F969300D 06092A86 4886F70D 01010405 00038181</span><br><span class="line">  00722A84 C1B4299D 59439A27 B987F1DA 9B56BCBE 40A0BD6A 6F68FB97 ADF5DD06</span><br><span class="line">  E05D17C6 56BB127F 0194CFAC 73C7E787 66430778 6846897B 3E36B02D ECE808C2</span><br><span class="line">  EB4AF52A B9B92E73 F83E27AE 6528D280 507C0203 BF6CD265 51F03DEC 366E8CCA</span><br><span class="line">  C1D7BBF0 3E0B2CE5 48B84C13 D628D957 062B1C18 3D869D6E 40DFCAEB F1C6E592 7A</span><br><span class="line">        quit</span><br><span class="line">!</span><br><span class="line">redundancy</span><br><span class="line">!</span><br><span class="line">no cdp log mismatch duplex</span><br><span class="line">!        </span><br><span class="line">ip tcp synwait-time 5</span><br><span class="line">ip ssh version 1</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ikev2 profile PROFILE        证书认证ikev2 profile</span><br><span class="line">    match certificate CERTMAP</span><br><span class="line">    authentication remote rsa-sig</span><br><span class="line">    authentication local rsa-sig</span><br><span class="line">    pki trustpoint CA</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ipsec profile IPSec-PROF    配置ipsec profile</span><br><span class="line">    set ikev2-profile PROFILE</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">interface Tunnel0</span><br><span class="line">    ip address 10.178.10.2 255.255.255.0</span><br><span class="line">    ip ospf 1 area 0                                宣告网络</span><br><span class="line">    tunnel source Ethernet0/0</span><br><span class="line">    tunnel mode ipsec ipv4</span><br><span class="line">    tunnel destination 199.105.11.4</span><br><span class="line">    tunnel protection ipsec profile IPSec-PROF      调用ipsec profi</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/0</span><br><span class="line">ip address 202.100.1.2 255.255.255.0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/1</span><br><span class="line">ip address 172.16.10.2 255.255.255.0</span><br><span class="line">ip ospf 1 area 0                                     宣告网络</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/2</span><br><span class="line">no ip address</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/3</span><br><span class="line">no ip address</span><br><span class="line">!</span><br><span class="line">router ospf 1                                        ospf协议启用</span><br><span class="line">!</span><br><span class="line">ip forward-protocol nd</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip http server</span><br><span class="line">no ip http secure-server</span><br><span class="line">ip route 0.0.0.0 0.0.0.0 202.100.1.254</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">control-plane</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">line con 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line aux 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line vty 0 4</span><br><span class="line">login</span><br><span class="line">transport input none</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<h2 id="R3———————————————————————–"><a href="#R3———————————————————————–" class="headerlink" title="R3———————————————————————–"></a>R3———————————————————————–</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line">R3#sh running-config</span><br><span class="line">Building configuration...</span><br><span class="line"></span><br><span class="line">Current configuration : 2863 bytes</span><br><span class="line">!</span><br><span class="line">! Last configuration change at 20:38:33 CST Mon Jun 26 2017</span><br><span class="line">!</span><br><span class="line">version 15.5</span><br><span class="line">service timestamps debug datetime msec</span><br><span class="line">service timestamps log datetime msec</span><br><span class="line">no service password-encryption</span><br><span class="line">!</span><br><span class="line">hostname R3</span><br><span class="line">!</span><br><span class="line">boot-start-marker</span><br><span class="line">boot-end-marker</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no aaa new-model</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">bsd-client server url https://cloudsso.cisco.com/as/token.oauth2</span><br><span class="line">clock timezone CST 8 0</span><br><span class="line">mmi polling-interval 60</span><br><span class="line">no mmi auto-configure</span><br><span class="line">no mmi pvc</span><br><span class="line">mmi snmp-timeout 180</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip icmp rate-limit unreachable</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">no ip domain lookup</span><br><span class="line">ip domain name kelp200.com                      配置domain name</span><br><span class="line">ip cef</span><br><span class="line">no ipv6 cef</span><br><span class="line">!</span><br><span class="line">multilink bundle-name authenticated</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">cts logging verbose</span><br><span class="line">!</span><br><span class="line">crypto pki server CA</span><br><span class="line">    database level complete</span><br><span class="line">    no database archive</span><br><span class="line">    issuer-name cn=Internet.kelp200.com, ou=yfjcinfo</span><br><span class="line">    grant auto</span><br><span class="line">!</span><br><span class="line">crypto pki trustpoint CA</span><br><span class="line">    revocation-check crl</span><br><span class="line">    rsakeypair CA</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto pki certificate chain CA</span><br><span class="line">certificate ca 01</span><br><span class="line">  3082023D 308201A6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313233</span><br><span class="line">  3832355A 170D3230 30363235 31323338 32355A30 32311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 311D301B 06035504 03131449 6E746572 6E65742E 6B656C70</span><br><span class="line">  3230302E 636F6D30 819F300D 06092A86 4886F70D 01010105 0003818D 00308189</span><br><span class="line">  02818100 C4B5FE1B 386F3CDD BC591040 52A559F4 D007F57D 21899A2E 73F158D8</span><br><span class="line">  62FCCF96 B24A576D 22FDF168 5BC5F428 3EFA3D6A BF94CDBC C5351965 C6387534</span><br><span class="line">  C36784CA AA540DC0 B9F8D8BE E531AED5 D7DFC131 D389558B C5279E52 3E6A819D</span><br><span class="line">  71C8153F 5C2CD062 37A9F020 969A7717 5BC54C56 8BDD9B30 7D3DAC2B CA4FD6E0</span><br><span class="line">  8422C817 02030100 01A36330 61300F06 03551D13 0101FF04 05300301 01FF300E</span><br><span class="line">  0603551D 0F0101FF 04040302 0186301F 0603551D 23041830 1680146A 67EB51B2</span><br><span class="line">  C7AABF3B 950E8650 F219D986 20F96930 1D060355 1D0E0416 04146A67 EB51B2C7</span><br><span class="line">  AABF3B95 0E8650F2 19D98620 F969300D 06092A86 4886F70D 01010405 00038181</span><br><span class="line">  00722A84 C1B4299D 59439A27 B987F1DA 9B56BCBE 40A0BD6A 6F68FB97 ADF5DD06</span><br><span class="line">  E05D17C6 56BB127F 0194CFAC 73C7E787 66430778 6846897B 3E36B02D ECE808C2</span><br><span class="line">  EB4AF52A B9B92E73 F83E27AE 6528D280 507C0203 BF6CD265 51F03DEC 366E8CCA</span><br><span class="line">  C1D7BBF0 3E0B2CE5 48B84C13 D628D957 062B1C18 3D869D6E 40DFCAEB F1C6E592 7A</span><br><span class="line">        quit</span><br><span class="line">!</span><br><span class="line">redundancy</span><br><span class="line">!</span><br><span class="line">no cdp log mismatch duplex</span><br><span class="line">!</span><br><span class="line">ip tcp synwait-time 5</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/0</span><br><span class="line">ip address 202.100.1.254 255.255.255.0</span><br><span class="line">!        </span><br><span class="line">interface Ethernet0/1</span><br><span class="line">ip address 199.105.11.254 255.255.255.0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/2</span><br><span class="line">no ip address</span><br><span class="line">shutdown</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/3</span><br><span class="line">no ip address</span><br><span class="line">shutdown</span><br><span class="line">!</span><br><span class="line">ip forward-protocol nd</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">ip http server                                  启动http服务</span><br><span class="line">no ip http secure-server</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">control-plane</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">line con 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line aux 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line vty 0 4</span><br><span class="line">login</span><br><span class="line">transport input none</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<h2 id="R4-———————————————————————–"><a href="#R4-———————————————————————–" class="headerlink" title="R4:———————————————————————–"></a>R4:———————————————————————–</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br></pre></td><td class="code"><pre><span class="line">R4#sh running-config</span><br><span class="line">Building configuration...</span><br><span class="line"></span><br><span class="line">Current configuration : 4669 bytes</span><br><span class="line">!</span><br><span class="line">! Last configuration change at 21:03:55 CST Mon Jun 26 2017</span><br><span class="line">!</span><br><span class="line">version 15.5</span><br><span class="line">service timestamps debug datetime msec</span><br><span class="line">service timestamps log datetime msec</span><br><span class="line">no service password-encryption</span><br><span class="line">!</span><br><span class="line">hostname R4</span><br><span class="line">!</span><br><span class="line">boot-start-marker</span><br><span class="line">boot-end-marker</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no aaa new-model</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">bsd-client server url https://cloudsso.cisco.com/as/token.oauth2</span><br><span class="line">clock timezone CST 8 0</span><br><span class="line">mmi polling-interval 60</span><br><span class="line">no mmi auto-configure</span><br><span class="line">no mmi pvc</span><br><span class="line">mmi snmp-timeout 180</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip icmp rate-limit unreachable</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">no ip domain lookup</span><br><span class="line">ip domain name kelp200.com</span><br><span class="line">ip cef</span><br><span class="line">no ipv6 cef</span><br><span class="line">!</span><br><span class="line">multilink bundle-name authenticated</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">cts logging verbose</span><br><span class="line">!</span><br><span class="line">crypto pki trustpoint CA</span><br><span class="line">enrollment url http://199.105.11.254:80</span><br><span class="line">subject-name cn=R4.kelp200.com, ou=yfjcinfo</span><br><span class="line">revocation-check crl</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto pki certificate map CERTMAP 10</span><br><span class="line">    subject-name co ou = yfjcinfo</span><br><span class="line">!</span><br><span class="line">crypto pki certificate chain CA</span><br><span class="line">certificate 03</span><br><span class="line">  308201FE 30820167 A0030201 02020103 300D0609 2A864886 F70D0101 05050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313234</span><br><span class="line">  3434345A 170D3138 30363236 31323434 34345A30 4B311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 31173015 06035504 03130E52 342E6B65 6C703230 302E636F</span><br><span class="line">  6D311D30 1B06092A 864886F7 0D010902 160E5234 2E6B656C 70323030 2E636F6D</span><br><span class="line">  305C300D 06092A86 4886F70D 01010105 00034B00 30480241 00BF72A9 DD5BB59B</span><br><span class="line">  2776D346 BF9B5466 B591B8D9 0E7CBFAF 7AEE9D72 41571188 28D084C8 61162050</span><br><span class="line">  AEF48655 7DA45483 C228AAE1 CBC14DA9 708F1B0F A3061535 6B020301 0001A34F</span><br><span class="line">  304D300B 0603551D 0F040403 0205A030 1F060355 1D230418 30168014 6A67EB51</span><br><span class="line">  B2C7AABF 3B950E86 50F219D9 8620F969 301D0603 551D0E04 160414CC 417A1961</span><br><span class="line">  6CE8C64A CE7D70CC 0A38F5BA 2A417430 0D06092A 864886F7 0D010105 05000381</span><br><span class="line">  81009C8E 6DA40BF2 BA8573A7 CB7B45CB D52B00EB 969CBEB2 52A29C42 4F7B098C</span><br><span class="line">  85C72190 A76DE062 295AD2FE 78FD0BA7 5339DAD2 534E866F 1907B946 658D577C</span><br><span class="line">  279EF610 66AA7D6B 6BE5BEBD 53042EED 69651C8F 188AE472 A2D9C8AB A9E5A347</span><br><span class="line">  71E0D3EA 1DDAE14D E8C74744 862ADE45 6EF1C445 0882F796 6D9A09FB 5C3520FA C937</span><br><span class="line">        quit</span><br><span class="line">certificate ca 01</span><br><span class="line">  3082023D 308201A6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313233</span><br><span class="line">  3832355A 170D3230 30363235 31323338 32355A30 32311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 311D301B 06035504 03131449 6E746572 6E65742E 6B656C70</span><br><span class="line">  3230302E 636F6D30 819F300D 06092A86 4886F70D 01010105 0003818D 00308189</span><br><span class="line">  02818100 C4B5FE1B 386F3CDD BC591040 52A559F4 D007F57D 21899A2E 73F158D8</span><br><span class="line">  62FCCF96 B24A576D 22FDF168 5BC5F428 3EFA3D6A BF94CDBC C5351965 C6387534</span><br><span class="line">  C36784CA AA540DC0 B9F8D8BE E531AED5 D7DFC131 D389558B C5279E52 3E6A819D</span><br><span class="line">  71C8153F 5C2CD062 37A9F020 969A7717 5BC54C56 8BDD9B30 7D3DAC2B CA4FD6E0</span><br><span class="line">  8422C817 02030100 01A36330 61300F06 03551D13 0101FF04 05300301 01FF300E</span><br><span class="line">  0603551D 0F0101FF 04040302 0186301F 0603551D 23041830 1680146A 67EB51B2</span><br><span class="line">  C7AABF3B 950E8650 F219D986 20F96930 1D060355 1D0E0416 04146A67 EB51B2C7</span><br><span class="line">  AABF3B95 0E8650F2 19D98620 F969300D 06092A86 4886F70D 01010405 00038181</span><br><span class="line">  00722A84 C1B4299D 59439A27 B987F1DA 9B56BCBE 40A0BD6A 6F68FB97 ADF5DD06</span><br><span class="line">  E05D17C6 56BB127F 0194CFAC 73C7E787 66430778 6846897B 3E36B02D ECE808C2</span><br><span class="line">  EB4AF52A B9B92E73 F83E27AE 6528D280 507C0203 BF6CD265 51F03DEC 366E8CCA</span><br><span class="line">  C1D7BBF0 3E0B2CE5 48B84C13 D628D957 062B1C18 3D869D6E 40DFCAEB F1C6E592 7A</span><br><span class="line">        quit</span><br><span class="line">!</span><br><span class="line">redundancy</span><br><span class="line">!</span><br><span class="line">no cdp log mismatch duplex</span><br><span class="line">!        </span><br><span class="line">ip tcp synwait-time 5</span><br><span class="line">ip ssh version 1</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ikev2 profile PROFILE</span><br><span class="line">    match certificate CERTMAP</span><br><span class="line">    authentication remote rsa-sig</span><br><span class="line">    authentication local rsa-sig</span><br><span class="line">    pki trustpoint CA</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ipsec profile IPSec-PROF</span><br><span class="line">    set ikev2-profile PROFILE</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">interface Tunnel0</span><br><span class="line">ip address 10.178.10.4 255.255.255.0</span><br><span class="line">ip ospf 1 area 0</span><br><span class="line">tunnel source Ethernet0/0</span><br><span class="line">tunnel mode ipsec ipv4</span><br><span class="line">tunnel destination 202.100.1.2</span><br><span class="line">tunnel protection ipsec profile IPSec-PROF</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/0</span><br><span class="line">ip address 199.105.11.4 255.255.255.0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/1</span><br><span class="line">ip address 192.168.10.4 255.255.255.0</span><br><span class="line">ip ospf 1 area 0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/2</span><br><span class="line">no ip address</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/3</span><br><span class="line">no ip address</span><br><span class="line">!</span><br><span class="line">router ospf 1</span><br><span class="line">!</span><br><span class="line">ip forward-protocol nd</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip http server</span><br><span class="line">no ip http secure-server</span><br><span class="line">ip route 0.0.0.0 0.0.0.0 199.105.11.254</span><br><span class="line">!</span><br><span class="line">ip access-list extended IKEV2</span><br><span class="line">permit ip 192.168.10.0 0.0.0.255 172.16.10.0 0.0.0.255</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">control-plane</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">line con 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line aux 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line vty 0 4</span><br><span class="line">login</span><br><span class="line">transport input none</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="R3-sh-crypto-pki-server"><a href="#R3-sh-crypto-pki-server" class="headerlink" title="R3#sh crypto pki server"></a>R3#sh crypto pki server</h2><p>Certificate Server CA:<br>    Status: enabled<br>    State: enabled<br>    Server’s configuration is locked  (enter “shut” to unlock it)<br>    Issuer name: cn=Internet.kelp200.com, ou=yfjcinfo<br>    CA cert fingerprint: F5D0EADB 41FAE0B9 E1321E77 2E48D3B1<br>    Granting mode is: auto<br>    Last certificate issued serial number (hex): 3<br>    CA certificate expiration timer: 20:38:25 CST Jun 25 2020<br>    CRL NextUpdate timer: 02:38:25 CST Jun 27 2017<br>    Current primary storage dir: nvram:<br>    Database Level: Complete - all issued certs written as <serialnum>.cer</serialnum></p>
+<hr>
+<h2 id="R3-sh-crypto-pki-certificates"><a href="#R3-sh-crypto-pki-certificates" class="headerlink" title="R3#sh crypto pki certificates"></a>R3#sh crypto pki certificates</h2><p>CA Certificate<br>  Status: Available<br>  Certificate Serial Number (hex): 01 <br>  Certificate Usage: Signature<br>  Issuer:<br>    cn=Internet.kelp200.com<br>    ou=yfjcinfo<br>  Subject:<br>    cn=Internet.kelp200.com<br>    ou=yfjcinfo<br>  Validity Date:<br>    start date: 20:38:25 CST Jun 26 2017<br>    end   date: 20:38:25 CST Jun 25 2020<br>  Associated Trustpoints: CA</p>
+<hr>
+<h2 id="R2-sh-crypto-pki-certificates"><a href="#R2-sh-crypto-pki-certificates" class="headerlink" title="R2#sh crypto pki certificates"></a>R2#sh crypto pki certificates</h2><p>Certificate<br>  Status: Available<br>  Certificate Serial Number (hex): 02    颁发给R2的证书<br>  Certificate Usage: General Purpose<br>  Issuer:<br>    cn=Internet.kelp200.com<br>    ou=yfjcinfo<br>  Subject:<br>    Name: R2.kelp200.com<br>    hostname=R2.kelp200.com<br>    cn=R2.kelp200.com<br>    ou=yfjcinfo<br>  Validity Date:<br>    start date: 20:42:25 CST Jun 26 2017<br>    end   date: 20:42:25 CST Jun 26 2018<br>  Associated Trustpoints: CA<br>  Storage: nvram:Internetkelp#2.cer</p>
+<p>CA Certificate<br>  Status: Available<br>  Certificate Serial Number (hex): 01    根证书<br>  Certificate Usage: Signature<br>  Issuer:<br>    cn=Internet.kelp200.com<br>    ou=yfjcinfo<br>  Subject:<br>    cn=Internet.kelp200.com<br>    ou=yfjcinfo<br>  Validity Date:<br>    start date: 20:38:25 CST Jun 26 2017<br>    end   date: 20:38:25 CST Jun 25 2020<br>  Associated Trustpoints: CA<br>  Storage: nvram:Internetkelp#1CA.cer</p>
+<hr>
+<h2 id="R2-show-crypto-engine-connections-active"><a href="#R2-show-crypto-engine-connections-active" class="headerlink" title="R2#show crypto engine connections active"></a>R2#show crypto engine connections active</h2><p>Crypto Engine Connections</p>
+<p>   ID  Type    Algorithm                 Encrypt      Decrypt   LastSeqN IP-Address<br>    9  IPsec   AES+SHA                       0              232      232 202.100.1.2<br>   10  IPsec   AES+SHA                         233        0          0 202.100.1.2<br>1009  IKEv2   SHA512+AES256         0            0          0 202.100.1.2</p>
+<h2 id="R2"><a href="#R2" class="headerlink" title="R2#"></a>R2#</h2><p><img src="https://i.imgur.com/tRnerpd.png" alt=""></p>
+<h1 id="二：R2给R4证书认证-R4给R2共享密钥认证"><a href="#二：R2给R4证书认证-R4给R2共享密钥认证" class="headerlink" title="二：R2给R4证书认证+R4给R2共享密钥认证"></a>二：R2给R4证书认证+R4给R2共享密钥认证</h1><h2 id="R2："><a href="#R2：" class="headerlink" title="R2："></a>R2：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br></pre></td><td class="code"><pre><span class="line">R2#sh running-config</span><br><span class="line">Building configuration...</span><br><span class="line"></span><br><span class="line">Current configuration : 4760 bytes</span><br><span class="line">!</span><br><span class="line">! Last configuration change at 21:48:05 CST Mon Jun 26 2017</span><br><span class="line">!</span><br><span class="line">version 15.5</span><br><span class="line">service timestamps debug datetime msec</span><br><span class="line">service timestamps log datetime msec</span><br><span class="line">no service password-encryption</span><br><span class="line">!</span><br><span class="line">hostname R2</span><br><span class="line">!</span><br><span class="line">boot-start-marker</span><br><span class="line">boot-end-marker</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no aaa new-model</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">bsd-client server url https://cloudsso.cisco.com/as/token.oauth2</span><br><span class="line">clock timezone CST 8 0</span><br><span class="line">mmi polling-interval 60</span><br><span class="line">no mmi auto-configure</span><br><span class="line">no mmi pvc</span><br><span class="line">mmi snmp-timeout 180</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip icmp rate-limit unreachable</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">no ip domain lookup</span><br><span class="line">ip domain name kelp200.com</span><br><span class="line">ip cef</span><br><span class="line">no ipv6 cef</span><br><span class="line">!</span><br><span class="line">multilink bundle-name authenticated</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">cts logging verbose</span><br><span class="line">!</span><br><span class="line">crypto pki trustpoint CA                                     信任证书机构CA</span><br><span class="line">    enrollment url http://202.100.1.254:80</span><br><span class="line">    subject-name cn=R2.kelp200.com, ou=yfjcinfo</span><br><span class="line">    revocation-check crl</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto pki certificate map CERTMAP 10                    定义map，后续调用</span><br><span class="line">    subject-name co ou = yfjcinfo                        包含ou=yfjcinfo 使用证书认证</span><br><span class="line">!</span><br><span class="line">crypto pki certificate chain CA</span><br><span class="line">certificate 02</span><br><span class="line">  308201FE 30820167 A0030201 02020102 300D0609 2A864886 F70D0101 05050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313234</span><br><span class="line">  3232355A 170D3138 30363236 31323432 32355A30 4B311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 31173015 06035504 03130E52 322E6B65 6C703230 302E636F</span><br><span class="line">  6D311D30 1B06092A 864886F7 0D010902 160E5232 2E6B656C 70323030 2E636F6D</span><br><span class="line">  305C300D 06092A86 4886F70D 01010105 00034B00 30480241 00D3FA76 9F9E65A9</span><br><span class="line">  CE21D71F A30F420A C28293E7 B0757631 F3D73CD1 7DC61FF2 BAA16B12 9CA15005</span><br><span class="line">  8D903451 BB16F494 F2C6DD03 262AA363 C971BD9C 73EFD335 3F020301 0001A34F</span><br><span class="line">  304D300B 0603551D 0F040403 0205A030 1F060355 1D230418 30168014 6A67EB51</span><br><span class="line">  B2C7AABF 3B950E86 50F219D9 8620F969 301D0603 551D0E04 16041474 6C9D7118</span><br><span class="line">  CEFA38AB AD9CAAED CC9EFF76 85B20F30 0D06092A 864886F7 0D010105 05000381</span><br><span class="line">  810028D7 872AD6F1 9BF30B58 A39B8BEA 827917AD 9A39FBFE 0DB7AA36 A4429002</span><br><span class="line">  84DB9820 F7DCC160 63DA22C2 7AEA5A3C 1176F4B1 4CF95542 97938C49 578679A0</span><br><span class="line">  553D5E47 16BCB72E 21D4F192 1B80AD31 1F961B57 A250B0DB 4CD458DB 9DB0A862</span><br><span class="line">  77DE8EDB A283D8FF B3005434 24BE45EE 3F2F038D 1AA5480F 09217248 E63FBD4E 5204</span><br><span class="line">        quit</span><br><span class="line">certificate ca 01</span><br><span class="line">  3082023D 308201A6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313233</span><br><span class="line">  3832355A 170D3230 30363235 31323338 32355A30 32311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 311D301B 06035504 03131449 6E746572 6E65742E 6B656C70</span><br><span class="line">  3230302E 636F6D30 819F300D 06092A86 4886F70D 01010105 0003818D 00308189</span><br><span class="line">  02818100 C4B5FE1B 386F3CDD BC591040 52A559F4 D007F57D 21899A2E 73F158D8</span><br><span class="line">  62FCCF96 B24A576D 22FDF168 5BC5F428 3EFA3D6A BF94CDBC C5351965 C6387534</span><br><span class="line">  C36784CA AA540DC0 B9F8D8BE E531AED5 D7DFC131 D389558B C5279E52 3E6A819D</span><br><span class="line">  71C8153F 5C2CD062 37A9F020 969A7717 5BC54C56 8BDD9B30 7D3DAC2B CA4FD6E0</span><br><span class="line">  8422C817 02030100 01A36330 61300F06 03551D13 0101FF04 05300301 01FF300E</span><br><span class="line">  0603551D 0F0101FF 04040302 0186301F 0603551D 23041830 1680146A 67EB51B2</span><br><span class="line">  C7AABF3B 950E8650 F219D986 20F96930 1D060355 1D0E0416 04146A67 EB51B2C7</span><br><span class="line">  AABF3B95 0E8650F2 19D98620 F969300D 06092A86 4886F70D 01010405 00038181</span><br><span class="line">  00722A84 C1B4299D 59439A27 B987F1DA 9B56BCBE 40A0BD6A 6F68FB97 ADF5DD06</span><br><span class="line">  E05D17C6 56BB127F 0194CFAC 73C7E787 66430778 6846897B 3E36B02D ECE808C2</span><br><span class="line">  EB4AF52A B9B92E73 F83E27AE 6528D280 507C0203 BF6CD265 51F03DEC 366E8CCA</span><br><span class="line">  C1D7BBF0 3E0B2CE5 48B84C13 D628D957 062B1C18 3D869D6E 40DFCAEB F1C6E592 7A</span><br><span class="line">        quit</span><br><span class="line">!</span><br><span class="line">redundancy</span><br><span class="line">!</span><br><span class="line">no cdp log mismatch duplex</span><br><span class="line">!        </span><br><span class="line">ip tcp synwait-time 5</span><br><span class="line">ip ssh version 1</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ikev2 keyring KEY</span><br><span class="line">  peer R4</span><br><span class="line">    address 199.105.11.4</span><br><span class="line">    pre-shared-key local CISCOR2                 我给对端的密钥</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ikev2 profile PROFILE</span><br><span class="line">    match certificate CERTMAP                    远端给我的是证书认证，调用证书认证用的map</span><br><span class="line">    identity local address 202.100.1.2              </span><br><span class="line">    authentication remote rsa-sig                远端给我的是证书认证</span><br><span class="line">    authentication local pre-share               我给远端的是共享密钥</span><br><span class="line">    keyring local KEY                            调用密钥</span><br><span class="line">    pki trustpoint CA                            信任CA</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">crypto ipsec profile IPSec-PROF</span><br><span class="line">    set ikev2-profile PROFILE</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">interface Tunnel0</span><br><span class="line">ip address 10.178.10.2 255.255.255.0</span><br><span class="line">ip ospf 1 area 0</span><br><span class="line">tunnel source Ethernet0/0</span><br><span class="line">tunnel mode ipsec ipv4</span><br><span class="line">tunnel destination 199.105.11.4</span><br><span class="line">tunnel protection ipsec profile IPSec-PROF</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/0</span><br><span class="line">ip address 202.100.1.2 255.255.255.0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/1</span><br><span class="line">ip address 172.16.10.2 255.255.255.0</span><br><span class="line">ip ospf 1 area 0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/2</span><br><span class="line">no ip address</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/3</span><br><span class="line">no ip address</span><br><span class="line">!</span><br><span class="line">router ospf 1</span><br><span class="line">!</span><br><span class="line">ip forward-protocol nd</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip http server</span><br><span class="line">no ip http secure-server</span><br><span class="line">ip route 0.0.0.0 0.0.0.0 202.100.1.254</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">control-plane</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">line con 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line aux 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line vty 0 4</span><br><span class="line">login</span><br><span class="line">transport input none</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<h2 id="R4"><a href="#R4" class="headerlink" title="R4====================================="></a>R4=====================================</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br></pre></td><td class="code"><pre><span class="line">R4# sh running-config</span><br><span class="line">Building configuration...</span><br><span class="line"></span><br><span class="line">Current configuration : 4657 bytes</span><br><span class="line">!</span><br><span class="line">! Last configuration change at 22:01:06 CST Mon Jun 26 2017</span><br><span class="line">!</span><br><span class="line">version 15.5</span><br><span class="line">service timestamps debug datetime msec</span><br><span class="line">service timestamps log datetime msec</span><br><span class="line">no service password-encryption</span><br><span class="line">!</span><br><span class="line">hostname R4</span><br><span class="line">!</span><br><span class="line">boot-start-marker</span><br><span class="line">boot-end-marker</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no aaa new-model</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">bsd-client server url https://cloudsso.cisco.com/as/token.oauth2</span><br><span class="line">clock timezone CST 8 0</span><br><span class="line">mmi polling-interval 60</span><br><span class="line">no mmi auto-configure</span><br><span class="line">no mmi pvc</span><br><span class="line">mmi snmp-timeout 180</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip icmp rate-limit unreachable</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">no ip domain lookup</span><br><span class="line">ip domain name kelp200.com                                      域名</span><br><span class="line">ip cef</span><br><span class="line">no ipv6 cef</span><br><span class="line">!</span><br><span class="line">multilink bundle-name authenticated</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">cts logging verbose</span><br><span class="line">!</span><br><span class="line">crypto pki trustpoint CA                                                                                    本地R4使用证书认证所信任的CA</span><br><span class="line">    enrollment url http://199.105.11.254:80</span><br><span class="line">    subject-name cn=R4.kelp200.com, ou=yfjcinfo</span><br><span class="line">    revocation-check crl</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto pki certificate chain CA</span><br><span class="line">certificate 03</span><br><span class="line">  308201FE 30820167 A0030201 02020103 300D0609 2A864886 F70D0101 05050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313234</span><br><span class="line">  3434345A 170D3138 30363236 31323434 34345A30 4B311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 31173015 06035504 03130E52 342E6B65 6C703230 302E636F</span><br><span class="line">  6D311D30 1B06092A 864886F7 0D010902 160E5234 2E6B656C 70323030 2E636F6D</span><br><span class="line">  305C300D 06092A86 4886F70D 01010105 00034B00 30480241 00BF72A9 DD5BB59B</span><br><span class="line">  2776D346 BF9B5466 B591B8D9 0E7CBFAF 7AEE9D72 41571188 28D084C8 61162050</span><br><span class="line">  AEF48655 7DA45483 C228AAE1 CBC14DA9 708F1B0F A3061535 6B020301 0001A34F</span><br><span class="line">  304D300B 0603551D 0F040403 0205A030 1F060355 1D230418 30168014 6A67EB51</span><br><span class="line">  B2C7AABF 3B950E86 50F219D9 8620F969 301D0603 551D0E04 160414CC 417A1961</span><br><span class="line">  6CE8C64A CE7D70CC 0A38F5BA 2A417430 0D06092A 864886F7 0D010105 05000381</span><br><span class="line">  81009C8E 6DA40BF2 BA8573A7 CB7B45CB D52B00EB 969CBEB2 52A29C42 4F7B098C</span><br><span class="line">  85C72190 A76DE062 295AD2FE 78FD0BA7 5339DAD2 534E866F 1907B946 658D577C</span><br><span class="line">  279EF610 66AA7D6B 6BE5BEBD 53042EED 69651C8F 188AE472 A2D9C8AB A9E5A347</span><br><span class="line">  71E0D3EA 1DDAE14D E8C74744 862ADE45 6EF1C445 0882F796 6D9A09FB 5C3520FA C937</span><br><span class="line">        quit</span><br><span class="line">certificate ca 01</span><br><span class="line">  3082023D 308201A6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030</span><br><span class="line">  32311130 0F060355 040B1308 79666A63 696E666F 311D301B 06035504 03131449</span><br><span class="line">  6E746572 6E65742E 6B656C70 3230302E 636F6D30 1E170D31 37303632 36313233</span><br><span class="line">  3832355A 170D3230 30363235 31323338 32355A30 32311130 0F060355 040B1308</span><br><span class="line">  79666A63 696E666F 311D301B 06035504 03131449 6E746572 6E65742E 6B656C70</span><br><span class="line">  3230302E 636F6D30 819F300D 06092A86 4886F70D 01010105 0003818D 00308189</span><br><span class="line">  02818100 C4B5FE1B 386F3CDD BC591040 52A559F4 D007F57D 21899A2E 73F158D8</span><br><span class="line">  62FCCF96 B24A576D 22FDF168 5BC5F428 3EFA3D6A BF94CDBC C5351965 C6387534</span><br><span class="line">  C36784CA AA540DC0 B9F8D8BE E531AED5 D7DFC131 D389558B C5279E52 3E6A819D</span><br><span class="line">  71C8153F 5C2CD062 37A9F020 969A7717 5BC54C56 8BDD9B30 7D3DAC2B CA4FD6E0</span><br><span class="line">  8422C817 02030100 01A36330 61300F06 03551D13 0101FF04 05300301 01FF300E</span><br><span class="line">  0603551D 0F0101FF 04040302 0186301F 0603551D 23041830 1680146A 67EB51B2</span><br><span class="line">  C7AABF3B 950E8650 F219D986 20F96930 1D060355 1D0E0416 04146A67 EB51B2C7</span><br><span class="line">  AABF3B95 0E8650F2 19D98620 F969300D 06092A86 4886F70D 01010405 00038181</span><br><span class="line">  00722A84 C1B4299D 59439A27 B987F1DA 9B56BCBE 40A0BD6A 6F68FB97 ADF5DD06</span><br><span class="line">  E05D17C6 56BB127F 0194CFAC 73C7E787 66430778 6846897B 3E36B02D ECE808C2</span><br><span class="line">  EB4AF52A B9B92E73 F83E27AE 6528D280 507C0203 BF6CD265 51F03DEC 366E8CCA</span><br><span class="line">  C1D7BBF0 3E0B2CE5 48B84C13 D628D957 062B1C18 3D869D6E 40DFCAEB F1C6E592 7A</span><br><span class="line">        quit</span><br><span class="line">!</span><br><span class="line">redundancy</span><br><span class="line">!</span><br><span class="line">no cdp log mismatch duplex</span><br><span class="line">!</span><br><span class="line">ip tcp synwait-time 5</span><br><span class="line">ip ssh version 1</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ikev2 keyring KEY</span><br><span class="line">  peer R2</span><br><span class="line">  address 202.100.1.2</span><br><span class="line">  pre-shared-key remote CISCOR2                                                                                        存储远端给我的共享密钥</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ikev2 profile PROFILE</span><br><span class="line">    match identity remote address 202.100.1.2 255.255.255.255                              远端R2给我的使用下面共享密钥的认证（下面一条authentication remote pre-share ）</span><br><span class="line">    identity local fqdn R4.kelp200.com                                                                                     本地给远端的FQMN，让远端知道我的名字（这一条可要可不要）</span><br><span class="line">    authentication remote pre-share                                                                                         远端给我的是共享密钥认证</span><br><span class="line">    authentication local rsa-sig                                                                                                    本地给远端R2的认证使用证书认证</span><br><span class="line">    keyring local KEY                                                                                                                         调用远端给我的共享密钥（密钥存在本地的keyring为KEY中）</span><br><span class="line">    pki trustpoint CA                                                                                                                         R4信任使用证书认证的CA，（在上面配置定义的）</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">crypto ipsec profile IPSec-PROF</span><br><span class="line">    set ikev2-profile PROFILE</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">interface Tunnel0</span><br><span class="line">    ip address 10.178.10.4 255.255.255.0</span><br><span class="line">    ip ospf 1 area 0</span><br><span class="line">    tunnel source Ethernet0/0</span><br><span class="line">    tunnel mode ipsec ipv4</span><br><span class="line">    tunnel destination 202.100.1.2</span><br><span class="line">    tunnel protection ipsec profile IPSec-PROF</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/0</span><br><span class="line">ip address 199.105.11.4 255.255.255.0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/1</span><br><span class="line">ip address 192.168.10.4 255.255.255.0</span><br><span class="line">ip ospf 1 area 0</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/2</span><br><span class="line">no ip address</span><br><span class="line">!</span><br><span class="line">interface Ethernet0/3</span><br><span class="line">no ip address</span><br><span class="line">!</span><br><span class="line">router ospf 1</span><br><span class="line">!</span><br><span class="line">ip forward-protocol nd</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">no ip http server</span><br><span class="line">no ip http secure-server</span><br><span class="line">ip route 0.0.0.0 0.0.0.0 199.105.11.254</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">control-plane</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!        </span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">line con 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line aux 0</span><br><span class="line">exec-timeout 0 0</span><br><span class="line">privilege level 15</span><br><span class="line">logging synchronous</span><br><span class="line">line vty 0 4</span><br><span class="line">login</span><br><span class="line">transport input none</span><br><span class="line">!</span><br><span class="line">!</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/VPN/" rel="tag"># VPN</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/24/IOS-ASA-ikev2-普通ikev2-异步共享密钥（完美实现）/" rel="next" title="“IOS&ASA ikev2 普通ikev2+异步共享密钥（完美实现）">
+                <i class="fa fa-chevron-left"></i> “IOS&ASA ikev2 普通ikev2+异步共享密钥（完美实现）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://i.imgur.com/VRLrl1E.jpg" alt="Karl Li">
+            
+              <p class="site-author-name" itemprop="name">Karl Li</p>
+              <p class="site-description motion-element" itemprop="description">美妙人生的关键在于你迷上什么东西</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一：双证书认证"><span class="nav-number">1.</span> <span class="nav-text">一：双证书认证</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#R2-———————————————————————–"><span class="nav-number">1.1.</span> <span class="nav-text">R2:———————————————————————–</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R3———————————————————————–"><span class="nav-number">1.2.</span> <span class="nav-text">R3———————————————————————–</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R4-———————————————————————–"><span class="nav-number">1.3.</span> <span class="nav-text">R4:———————————————————————–</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R3-sh-crypto-pki-server"><span class="nav-number">1.4.</span> <span class="nav-text">R3#sh crypto pki server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R3-sh-crypto-pki-certificates"><span class="nav-number">1.5.</span> <span class="nav-text">R3#sh crypto pki certificates</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R2-sh-crypto-pki-certificates"><span class="nav-number">1.6.</span> <span class="nav-text">R2#sh crypto pki certificates</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R2-show-crypto-engine-connections-active"><span class="nav-number">1.7.</span> <span class="nav-text">R2#show crypto engine connections active</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R2"><span class="nav-number">1.8.</span> <span class="nav-text">R2#</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二：R2给R4证书认证-R4给R2共享密钥认证"><span class="nav-number">2.</span> <span class="nav-text">二：R2给R4证书认证+R4给R2共享密钥认证</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#R2："><span class="nav-number">2.1.</span> <span class="nav-text">R2：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#R4"><span class="nav-number">2.2.</span> <span class="nav-text">R4=====================================</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Karl Li</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
