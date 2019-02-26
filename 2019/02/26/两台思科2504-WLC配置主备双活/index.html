@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="WLC,">
 
 
 
@@ -79,17 +79,25 @@
 
 
 
-<meta name="description" content="一、升级前准备工作1、准备好所要升级的IOS文件及对应的ASDM文件2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2） 二、升级步骤">
+<meta name="description" content="#WLC故障切换配置（冗余） ###为了实现 WLC故障切换或冗余，必须完成以下步骤：  ####A． 为两台WLC配置移动组.  ####B. 为LAP 指定主、备WLC ####C．配置WLC Fallback特性 为2台WLC配置移动组  通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC上。当">
+<meta name="keywords" content="WLC">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kali">
-<meta property="og:url" content="http://yoursite.com/2019/01/22/ASA的升级过程/index.html">
+<meta property="og:title" content="两台思科2504 WLC配置主备双活">
+<meta property="og:url" content="http://yoursite.com/2019/02/26/两台思科2504-WLC配置主备双活/index.html">
 <meta property="og:site_name" content="简">
-<meta property="og:description" content="一、升级前准备工作1、准备好所要升级的IOS文件及对应的ASDM文件2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2） 二、升级步骤">
+<meta property="og:description" content="#WLC故障切换配置（冗余） ###为了实现 WLC故障切换或冗余，必须完成以下步骤：  ####A． 为两台WLC配置移动组.  ####B. 为LAP 指定主、备WLC ####C．配置WLC Fallback特性 为2台WLC配置移动组  通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC上。当">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-23T14:33:11.579Z">
+<meta property="og:image" content="https://i.imgur.com/szonTRh.jpg">
+<meta property="og:image" content="https://i.imgur.com/0GDaCgK.jpg">
+<meta property="og:image" content="https://i.imgur.com/r564DgB.jpg">
+<meta property="og:image" content="https://i.imgur.com/d5IOzNW.jpg">
+<meta property="og:image" content="https://i.imgur.com/cmykZVb.jpg">
+<meta property="og:image" content="https://i.imgur.com/Hz3byhH.jpg">
+<meta property="og:updated_time" content="2019-02-26T11:39:10.160Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kali">
-<meta name="twitter:description" content="一、升级前准备工作1、准备好所要升级的IOS文件及对应的ASDM文件2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2） 二、升级步骤">
+<meta name="twitter:title" content="两台思科2504 WLC配置主备双活">
+<meta name="twitter:description" content="#WLC故障切换配置（冗余） ###为了实现 WLC故障切换或冗余，必须完成以下步骤：  ####A． 为两台WLC配置移动组.  ####B. 为LAP 指定主、备WLC ####C．配置WLC Fallback特性 为2台WLC配置移动组  通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC上。当">
+<meta name="twitter:image" content="https://i.imgur.com/szonTRh.jpg">
 
 
 
@@ -119,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/01/22/ASA的升级过程/">
+  <link rel="canonical" href="http://yoursite.com/2019/02/26/两台思科2504-WLC配置主备双活/">
 
 
 
 
 
-  <title>kali | 简</title>
+  <title>两台思科2504 WLC配置主备双活 | 简</title>
   
 
 
@@ -232,7 +240,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/22/ASA的升级过程/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/26/两台思科2504-WLC配置主备双活/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
@@ -249,7 +257,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">kali</h1>
+          <h1 class="post-title" itemprop="name headline">两台思科2504 WLC配置主备双活</h1>
         
 
         <div class="post-meta">
@@ -261,8 +269,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-22T14:27:49+08:00">
-                2019-01-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-26T18:48:17+08:00">
+                2019-02-26
               </time>
             
 
@@ -299,16 +307,57 @@
       
 
       
-        <p>一、升级前准备工作<br>1、准备好所要升级的IOS文件及对应的ASDM文件<br>2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2）</p>
-<p>二、升级步骤<br><a id="more"></a><br>1、telnet上ASA<br>ASA&gt;ena                    //进入特权模式<br>ASA#conf t                 //进入配置模式</p>
-<p>2、查看ASA上的文件、版本信息及启动文件<br>ASA(config)# dir           //查看asa上的文件<br>Directory of disk0:/<br>4879   -rw- 8202240   19:18:10 Nov 16 2011   asa721-k8.bin<br>2391   -rw- 5539756   00:43:38 Nov 05 2007   asdm521.bin<br>4842   drw- 0         18:51:24 Nov 16 2011 log<br>4843   drw- 0         18:51:36 Nov 16 2011 crypto_archive<br>255426560 bytes total (215465984 bytes free)</p>
-<p>CISCOASA(config)# show ver      //查看版本信息及启动文件<br>Cisco Adaptive Security Appliance Software Version 7.2(1)<br>Device Manager Version 5.2(1)<br>。。。。。<br>System image file is “disk0:/asa721-k8.bin” //这就是启动文件和路径<br>。。。。。</p>
-<p>3、备份ASA上现存版本文件、ASDM文件及配置信息<br>ASA(config)#copy disk0:/asa721-k8.bin t<a href="ftp://192.168.1.2/asa721-k8.bin" target="_blank" rel="noopener">ftp://192.168.1.2/asa721-k8.bin</a><br>//将原有IOS文件备份到TFTP服务器上<br>ASA(config)# copy disk0:/asdm521.bin t<a href="ftp://192.168.1.2/asdm521.bin" target="_blank" rel="noopener">ftp://192.168.1.2/asdm521.bin</a><br>//将原有asdm文件备份到TFTP服务器上<br>show run<br>//显示当前的配置，将此配置复制后备份下来，以免操作失误导致配置丢失</p>
-<p>4、将要更新版本文件及ASDM文件上传到tftp<br>ASA(config)# copy t<a href="ftp://192.168.1.2/asa821-k8.bin" target="_blank" rel="noopener">ftp://192.168.1.2/asa821-k8.bin</a> disk0:/asa821-k8.bin<br>//将新的IOS文件从TFTP服务器上拷贝到ASA中<br>ASA(config)# copy t<a href="ftp://192.168.1.2/asdm-621.bin" target="_blank" rel="noopener">ftp://192.168.1.2/asdm-621.bin</a> disk0:/asdm-621.bin<br>//将新的IOS文件从TFTP服务器上拷贝到ASA中<br>ASA(config)# dir      //再次显示目录，检查文件是否拷贝成功</p>
-<p>5、设置启动文件及ASDM<br>ASA(config)# no boot system disk0:/asa721-k8.bin //取消之前的启动IOS<br>ASA(config)# boot system disk0:/asa821-k8.bin     //设置新的启动IOS<br>ASA(config)# asdm image disk0:/asdm621.bin        //设置新的ASDM<br>Device Manager image set, but not a valid image file disk0:/asdm-621.bin<br>//由于新的IOS文件在重新启动前并未生效，所以会提示新的ASDM镜像在设置关联的时候会提示无效。<br>ASA(config)# exit<br>ASA# wr         //保存配置<br>ASA# reload     //重新启动，使配置生效</p>
-<p>三、升级失败后的处理措施<br>当升级操作失败导致防火墙flash被erase后，设备会因为找不到启动文件而不断地重启<br>1、进入监控模式<br>在设备启动时会有提示按某个键进入监控模式。如下：<br>Use BREAK or ESC to interrupt boot.<br>Use SPACE to begin boot immediately.<br>按“ESC”键进入监控模式。<br>rommon #1&gt;</p>
-<p>2、设置ASA<br>升级IOS需要对ASA进行一些简单的设置，如设置设备的地址、设置tftp服务器的地址、设置IOS软件的文件名、sync保存、用ping命令测试与tftpserver的连通性、最后执行命令tftpdnld，软件开始装入。<br>注意：在监控模式下我们需要将电脑和ASA5510的管理接口相连，IP地址也是为管理接口设置的。<br>rommon #2&gt; ADDRESS=192.168.1.1（路由器地址）<br>rommon #3&gt; GATEWAY=192.168.1.2（默认网关，设置为本机地址即可）<br>rommon #4&gt; IMAGE=asa821-k8.bin（指定IOS文件名）<br>rommon #5&gt; SERVER=192.168.1.2（TFTP SERVER 地址，即本机地址）<br>rommon #6&gt;<br>rommon #6&gt; sync<br>Updating NVRAM Parameters…<br>rommon #7&gt; ping 192.168.1.2<br>Link is UP<br>Sending 20, 100-byte ICMP Echoes to 192.168.1.2, timeout is 4 seconds:<br>?!!!!!!!!!!!!!!!!!!!<br>Success rate is 95 percent (19/20)</p>
-<p>3、执行tftpdnld命令<br>执行后显示如下：<br>rommon #8&gt; tftpdnld<br>ROMMON Variable Settings:<br>ADDRESS=192.168.1.1<br>SERVER=192.168.1.<br>GATEWAY=192.168.1.2<br>PORT=Management0/0<br>VLAN=untagged<br>IMAGE=asa821-k8.bin<br>CONFIG=<br>LINKTIMEOUT=20<br>PKTTIMEOUT=4<br>RETRY=20<br>tftp <a href="mailto:asa821-k8.bin@192.168.1.2" target="_blank" rel="noopener">asa821-k8.bin@192.168.1.2</a> via 192.168.1.2<br>!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!<br>4、将IOS上传到ASA<br>此时IOS还没有装入ASA，而是从tftp引导启动设备。这一点当设备启动完毕后可以用show version命令看到：<br>System image file is “t<a href="ftp://192.168.1.2/asa821-k8.bin&quot;" target="_blank" rel="noopener">ftp://192.168.1.2/asa821-k8.bin&quot;</a><br>启动完毕后需要将tftp server连接到除管理接口以外的其它接口，然后再升级IOS<br>注意：必须要将接口配置成 inside口<br>ASA#conf t<br>ASA(config)#int e0/0<br>ASA(config-if)#nameif inside<br>ASA(config-if)#ip add 192.168.1.1 255.255.255.0<br>ASA(config-if)#no sh<br>ASA#ping 192.168.1.2<br>通后就可以升级IOS了<br>ASA#copy tftp: flash:<br>Tftp server IP address：192.168.1.2<br>Source file name:asa821-k8.bin<br>Destination file name:asa821-k8.bin<br>到这一步并没有结束，此时还需要进行boot system的设置<br>使用命令<br>ASA(config)#boot system disk0：/asa821-k8.bin<br>ASA(config)#asdm image disk0：/asdm-621.bin<br>ASA(config)#wr<br>然后reload一下就可以了<br>重启之后在dir查看一下，基本上就大功告成了。<br>IOS恢复以后呢还需要将图形界面管理软件拷贝到ASA，和copy IOS的命令是一样的。</p>
+        <p>#WLC故障切换配置（冗余）<br><img src="https://i.imgur.com/szonTRh.jpg" alt=""></p>
+<p>###为了实现 WLC故障切换或冗余，必须完成以下步骤： </p>
+<p>####A． 为两台WLC配置移动组. </p>
+<p>####B. 为LAP 指定主、备WLC</p>
+<p>####C．配置WLC Fallback特性</p>
+<p><strong>为2台WLC配置移动组</strong> </p>
+<p><strong>通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余<br>的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC<br>上。当主WLC恢复正常，AP可以重新注册到该台WLC上。故障切换时间为30秒，<br>这个期间通信将会中断。</strong></p>
+<blockquote>
+<p>提示: 所有属于同一个移动组的WLC配置的移动组名字要一致，且大小写敏感。<br>移动组成员必须包括该组内所有的WLC，以确保可以做到WLC的无缝切换，以及当<br>主WLC恢复正常，能够让AP重新注册。<br>本实例移动组包括两台WLC，通过以下步骤配置无线移动组：*</p>
+</blockquote>
+<p>###1.   WLC图形界面下，在上方的菜单下点击进入 Controller，然后在左边菜单</p>
+<blockquote>
+<p>选择Mobility Groups . 出现窗口Static Mobility Group Members，在这里可以增加<br><img src="https://i.imgur.com/0GDaCgK.jpg" alt=""></p>
+</blockquote>
+<p>###2.   增加一个新的移动组<br>本例只包括两台WLC. </p>
+<blockquote>
+<p>a.选择 New .<br>b.设定移动组成员IP、MAC以及组名称.<br>c.点击 Apply .</p>
+</blockquote>
+<p>本实例第二台WLC的IP为172.16.1.50 ，MAC地址为00:0b:85:33:52:80, 移动组为Test.</p>
+<p><img src="https://i.imgur.com/r564DgB.jpg" alt=""></p>
+<p>通过Ping菜单检测移动组成员的连通性.<br><img src="https://i.imgur.com/d5IOzNW.jpg" alt=""><br>在另一台WLC上重复以上步骤，组名字大小写敏感，并且在两台WLC上必须要一致。移动组主要用于支持在WLC内部以及WLC之间漫游。为LAP指定主，备WLC </p>
+<p>###接下来的步骤为LAP指定主、备WLC： </p>
+<blockquote>
+<p>1.图形界面下选择 Wireless 菜单，选择AP列表下的AP，点击  Detail<br>出现新的窗口All APs Details.</p>
+</blockquote>
+<p><img src="https://i.imgur.com/cmykZVb.jpg" alt=""><br>在该窗口下，定义主、备WLC。.<br>Note: 在主、备WLC下输入相关WLC的名字，而不是输入IP或MAC.  </p>
+<p>###配置WLC Fallback特性</p>
+<p>###最后一步是配置WLC Fallback特性:  </p>
+<blockquote>
+<ol>
+<li>WLC图形界面下进入 CONTROLLER GENERAL. </li>
+<li>在AP FALLBACK 选项, 选择ENABLED   </li>
+<li>CLICK APPLY . </li>
+</ol>
+</blockquote>
+<blockquote>
+<p>Note: 在备用WLC上配置Fallback特性即可。既便如此，建议在所有WLC上配置Fallback特性，因为，主WLC同样可以作为其他AP的备用WLC。</p>
+</blockquote>
+<p><img src="https://i.imgur.com/Hz3byhH.jpg" alt=""><br>至此WLC故障切换配置完成。当主WLC（本例为WLC-1）出现故障，AP会自动注册<br>到WLC-2上，当WLC-1恢复正常，AP便重新注册到WLC-1上，主、备WLC的切换<br>同样会影响AP上的客户端。</p>
+<blockquote>
+<p>提示注意项：<br>有时，同一移动组下的瘦AP被其他WLC认为是非法AP，这是一个bug.<br>这会发生在以下两种情况下： </p>
+<ol>
+<li>AP有多于24个邻居，而AP最多支持24个，其余的将视为非法AP。  </li>
+<li>AP1可以发现注册到AP2上的客户端，但是无法发现AP2，因此无法将AP2<br>当做一个邻居。</li>
+</ol>
+</blockquote>
+<p>解决方式为在WLC或者WCS上手动配置AP known internal，配置步骤如下：</p>
+<p>#####1.   WLC图形界面下选择 Wireless. </p>
+<p>#####2.   在左边菜单下点击Rogue Aps . </p>
+<p>#####3.   在非法AP下点击 Edit. </p>
+<p>#####4.   在Update Status  菜单下选择 Known internal ，点击  Apply .</p>
 
       
     </div>
@@ -324,6 +373,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/WLC/" rel="tag"># WLC</a>
+          
+        </div>
+      
 
       
       
@@ -333,15 +388,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/01/27/IOS-IOS-ikev2-双证书-证书-共享密钥/" rel="next" title="IOS&IOS ikev2 双证书+证书&共享密钥">
+                <i class="fa fa-chevron-left"></i> IOS&IOS ikev2 双证书+证书&共享密钥
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/01/23/PBR路由选择的操作/" rel="prev" title="PBR的简单配置">
-                PBR的简单配置 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
