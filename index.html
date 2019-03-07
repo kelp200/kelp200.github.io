@@ -232,6 +232,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/07/“二层端口安全防护技术”/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Karl Li">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/07/“二层端口安全防护技术”/" itemprop="url">“二层端口安全防护技术”</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-07T21:07:38+08:00">
+                2019-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="二层安全："><a href="#二层安全：" class="headerlink" title="二层安全："></a>二层安全：</h2><h4 id="二层攻击方法可分为四大类："><a href="#二层攻击方法可分为四大类：" class="headerlink" title="二层攻击方法可分为四大类："></a>二层攻击方法可分为四大类：</h4><h5 id="1、MAC-layer-attacks"><a href="#1、MAC-layer-attacks" class="headerlink" title="1、MAC layer attacks"></a>1、MAC layer attacks</h5><h5 id="2、VLAN-attacks"><a href="#2、VLAN-attacks" class="headerlink" title="2、VLAN attacks"></a>2、VLAN attacks</h5><h5 id="3、spoof-attacks"><a href="#3、spoof-attacks" class="headerlink" title="3、spoof attacks"></a>3、spoof attacks</h5><h5 id="4、attacks-on-switch-devices"><a href="#4、attacks-on-switch-devices" class="headerlink" title="4、attacks on switch devices"></a>4、attacks on switch devices</h5><p><img src="https://i.imgur.com/yFL458p.jpg" alt=""></p>
+<h4 id="第一类、MAC-layer-attacks"><a href="#第一类、MAC-layer-attacks" class="headerlink" title="第一类、MAC layer attacks"></a>第一类、MAC layer attacks</h4><p>攻击方法： 1、MAC地址flooding攻击<br>          2、MAC地址的欺骗攻击<br>解决方案：<br>    1、基于源MAC地址允许流量：端口安全<br>    2、基于源MAC地址限制流量：static CAM<br>    3、阻止未知的单/组播帧<br>    4、802.1x基于端口的认证</p>
+<h4 id="第二类、VLAN-attacks"><a href="#第二类、VLAN-attacks" class="headerlink" title="第二类、VLAN attacks"></a>第二类、VLAN attacks</h4><p>解决方案： 1、switch mode access<br>          2、VACL<br>          3、PVLAN</p>
+<h4 id="第三类、spoof-attacks"><a href="#第三类、spoof-attacks" class="headerlink" title="第三类、spoof attacks"></a>第三类、spoof attacks</h4><pre><code>1、DHCP spoof
+   解决方案：DHCP snooping
+2、IP spoof
+   解决方案：IP 源防护
+3、ARP spoof
+   解决方案：1、静态绑定ARP条目
+            2、DAI
+</code></pre><h4 id="第四类、attacks-on-switch-devices"><a href="#第四类、attacks-on-switch-devices" class="headerlink" title="第四类、attacks on switch devices"></a>第四类、attacks on switch devices</h4><pre><code>1、关闭不必要的服务，比如CDP
+2、限制广播/组播流量
+3、为交换机设置登录密码
+4、使用SSH实现安全的登录
+</code></pre><h3 id="端口安全"><a href="#端口安全" class="headerlink" title="端口安全"></a>端口安全</h3><pre><code>下面从端口安全展开来讲这几类安全技术的实现方法
+</code></pre><p>SW端口安全是2层特性，提供两个方面的保护：<br>  1、可以限定一个接口所能学习的MAC地址数量<br>  2、可以在一个接口静态绑定MAC地址</p>
+<p>1.基于主机MAC来允许流量<br>　·可定义2个参数：授权的MAC地址/允许学习多少个MAC地址（默认＝1）<br>　·违背端口安全，采取的行为：<br>　　1.shutdown：将永久性或特定周期内Err-Disable端口（默认行为）,并发送snmp trap<br>　　2.restrict：当超过所允许学习的最大MAC数时，将未授权主机的帧丢弃drop,并将violation计数器增加<br>　　3.protect ：当超过所允许学习的最大MAC数时，将未授权主机的帧丢弃drop<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">int f0/1</span><br><span class="line">  switchport mode access      //启用端口安全时，必须先设为access接口</span><br><span class="line">  switchport port-security    //启用端口安全(默认只能学一个MAC)</span><br><span class="line">  switchport port-security maximum 1   //指定最多允许学多少个地址</span><br><span class="line">  switchport port-security mac-address aaaa.bbbb.cccc</span><br><span class="line">  switchport port-security violation [protect|restrict|shutdown] //指定行为</span><br><span class="line"> </span><br><span class="line">  switchport port-security aging time 1 （分钟）//设定多长时间后能重新学习MAC地址，也就是设定现有MAC地址的有效期</span><br><span class="line"> </span><br><span class="line">  switchport port-security mac-address sticky  //将动态学到的地址粘住，永久使用</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">show port-security                  //可以看到哪些接口应用了端口安全</span><br><span class="line">show port-security address          //可以看到授权的MAC地址</span><br><span class="line">show port-security interface f0/1   //可以看到接口的具体状态</span><br><span class="line">show interfaces fastEthernet 0/1</span><br><span class="line"> </span><br><span class="line">FastEthernet0/1 is down, line protocol is down (err-disabled)</span><br></pre></td></tr></table></figure></p>
+<p>通常做接口安全，要先把接口shut down，这样它就不会自动学习</p>
+<p>让err-disable接口自动恢复<br>errdisable recovery cause psecure-violation<br>show errdisable</p>
+<p>2.基于主机MAC来限制流量 （3550上才可以做）<br>　列表中定义的MAC将被限制流量</p>
+<p>mac-address-table static 0010.7b80.7b9b vlan 1 drop</p>
+<p>3.阻塞未知单(组)播扩散 （3550上才可以做）<br>　对未知MAC地址，SW将从本VLAN的其他端口转发出去,但对于某些端口（端口安全只需要一个MAC/已到最大MAC）没必要再转发这些单（组）播。就可以在这些端口上设定这一特性，通常结合端口安全来做。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int f0/1</span><br><span class="line">  switchport block [unicast | multicast]</span><br><span class="line"> </span><br><span class="line">show int f0/1 switchport</span><br><span class="line"> </span><br><span class="line">...Unknown unicast blocked: enabled</span><br><span class="line">...Unknown multicast blocked: disabled</span><br></pre></td></tr></table></figure>
+<p>4、802.1x基于端口的认证<br>一种第二层的访问控制方法，通过AAA服务器对接入一个接口的用户进行认证，以决定客户能否访问网络。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">配置：</span><br><span class="line">aaa new-model</span><br><span class="line">aaa authentication dot1x default group radius</span><br><span class="line">dot1x system-auth-control</span><br><span class="line"> </span><br><span class="line">interface f0/1</span><br><span class="line">  dot1x port-control auto</span><br></pre></td></tr></table></figure></p>
+<p>Vlan 的 access-map (可以基于mac与ip)<br>VACL也叫VLAN映射表，通过VACL可以实现对一个VLAN中的流量进行过滤。VACL可以根据二层信息进行过滤，也可以根据三层信息来进行过滤。</p>
+<p>1、通过调用IP  ACL，可以根据三层的IP地址、协议以及端口号等信息进行过滤。<br>2、通过调用MAC  ACL，可以根据MAC地址进行过滤，还可以过滤其它的非IP流量。</p>
+<pre><code>每一个VACL可以包含多条语句，每一条语句对于匹配的流量可以有三种不同的操作：
+1、forward   转发，对数据帧或数据包进行正常转发
+2、drop   丢弃，当数据流与某个拒绝语句匹配上，将被丢弃
+3、重定向  对于数据流的转发方向作重定向   (高端交换机才支持)
+注意：如果没有说明一条语句的操作行为，默认的行为是forward。如果进入VLAN的数据流没有匹配上任何一条语句，最后将被丢弃掉。
+</code></pre><p>基于IP的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">access-list 1 permit 192.168.1.1 0.0.0.0</span><br><span class="line"> </span><br><span class="line">vlan access-map CCNP 10</span><br><span class="line">  match ip address 1</span><br><span class="line">  action drop</span><br><span class="line">vlan access-map CCNP 20</span><br><span class="line">  action forword</span><br><span class="line"> </span><br><span class="line">vlan filter CCNP vlan-list 100   //全局模式下调用，要指明用在哪个VLAN中,也可对所有ALL</span><br><span class="line"></span><br><span class="line">注意：每一条语句默认是转发的  show run 可以看到有 action forword</span><br><span class="line"> </span><br><span class="line">show vlan access-map</span><br><span class="line">show vlan filter</span><br><span class="line"> </span><br><span class="line">基于mac地址的(MAC地址列表)：</span><br><span class="line"></span><br><span class="line">1、先写MAC地址列表</span><br><span class="line">mac access-list extended ccnp </span><br><span class="line">  permit host 00e0.1e3d.d18c any</span><br><span class="line"></span><br><span class="line">2、再写</span><br><span class="line">access-map </span><br><span class="line">vlan access-map CCNP 10</span><br><span class="line"> action drop</span><br><span class="line"> match mac address ccnp</span><br><span class="line">vlan access-map CCNP 20</span><br><span class="line"> action forward</span><br><span class="line"></span><br><span class="line">3、调用：</span><br><span class="line">R1(config)#vlan filter CCNP vlan-list 10</span><br><span class="line">		Access-map的名字   vlan号</span><br><span class="line">R1(config)#vlan filter CCNP vlan-list all   对所有VLAN</span><br></pre></td></tr></table></figure></p>
+<pre><code>注意：做这个实验时，要在每一台路由器上先clear arp-cache
+</code></pre><h3 id="DHCP-snooping"><a href="#DHCP-snooping" class="headerlink" title="DHCP snooping"></a>DHCP snooping</h3><p>原理：<br>–启用后，可以将交换机的端口分为trusted接口和Untrusted接口，默认在交换机上启用后，所有接口变为Untrusted接口，需要手动设置trusted接口。<br>–对于Untrusted接口，只能接收DHCP的请求消息，不会向这个接口发送出DHCP的请求消息。并且drop掉接口进来的DHCP的响应消息。<br>–对于trusted接口，没有任何限制，也不做检测。</p>
+<p>注意：早期的IOS不支持<br>配置实例：<br><img src="https://i.imgur.com/nISMBJH.jpg" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">第一步：</span><br><span class="line">SW1(config)#ip dhcp snooping         必须先开启这一命令，相当于总开关</span><br><span class="line">SW1(config)#ip dhcp snooping vlan 1  再指定VLAN，这一步也必须要</span><br><span class="line"> </span><br><span class="line">第二步：指定trusted接口，通常是trunk接口、连接真实DHCP服务器的接口。</span><br><span class="line">SW1(config-if)#ip dhcp snooping trust</span><br><span class="line"> </span><br><span class="line">第三步：还要在被信任的DHCP服务器上打上下列命令：（如果是用路由器做DHCP服务器的话才需要）</span><br><span class="line">R1(config)#ip dhcp relay information trust-all</span><br><span class="line"> </span><br><span class="line">SW1#show ip dhcp snooping</span><br></pre></td></tr></table></figure></p>
+<pre><code>关键点：DHCP snooping会在接入的交换机上建立一个DHCP绑定表，为每一个分配的IP建立一个表项，其中包括客户端的IP地址、MAC地址、端口号、VLAN编号、租用和绑定类型等信息。也可手动向这个绑定表中添加表项。
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SW1#show ip dhcp snooping binding   只显示动态的绑定项</span><br><span class="line">SW1#show ip dhcp snooping database</span><br><span class="line">SW1#show ip source binding   显示动态和静态绑定项</span><br><span class="line"> </span><br><span class="line">SW1(config)#ip dhcp snooping binding 1234.5678.abcd vlan 20 172.16.1.1 interface f0/5 静态绑定一个条目</span><br><span class="line"> </span><br><span class="line">其它命令：</span><br><span class="line">SW1(config)#ip dhcp snooping information option   //启用option82选项，默认就已开启</span><br><span class="line">SW1(config)#ip dhcp snooping limit rate 100       //限定接口每秒可收多少个DHCP请求包</span><br></pre></td></tr></table></figure>
+<h3 id="IPSG源保护"><a href="#IPSG源保护" class="headerlink" title="IPSG源保护"></a>IPSG源保护</h3><p>源保护特性可防止非法设备盗用合法设备的IP接入网络，只能用于二层端口</p>
+<p>需要用到IP绑定表，有两种方式获得绑定条目：<br>    1、静态绑定IP源地址<br>    2、使用DHCP snooping技术中动态生成的源IP绑定表</p>
+<p>原理：一旦在一个接口启用了源保护，这个接口默认拒绝所有IP，除非在IP绑定表中有这个接口对应的IP地址绑定条目。</p>
+<figure class="highlight plain"><figcaption><span>source binding aaaa.bbbb.cccc vlan 1 100.1.1.1 interface f0/1  静态绑定</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">ip dhcp snooping </span><br><span class="line">ip dhcp snooping vlan 1</span><br><span class="line"> </span><br><span class="line">interface f0/10</span><br><span class="line">  ip verify source                //开启源保护，只基于IP进行检查，在3560和3750上这样配</span><br><span class="line">  ip verify source port-security  //开启源保护，基于IP和MAC进行检查，默认对于所有的IP是deny-any，对于mac的动作是permit-any，如果做了端口安全，对于mac的动作就是deny-any。</span><br><span class="line"> </span><br><span class="line">SW1(config-if)#ip verify source vlan dhcp-snooping port-security 好像4500以上才这样开启</span><br><span class="line"> </span><br><span class="line">show ip verify source  查看所允许的IP地址</span><br><span class="line">show ip source binding</span><br></pre></td></tr></table></figure>
+<h3 id="DAI（dynamic-arp-inspection）"><a href="#DAI（dynamic-arp-inspection）" class="headerlink" title="DAI（dynamic arp inspection）"></a>DAI（dynamic arp inspection）</h3><p>是一种能够验证网络中ARP数据包的安全特性，可以防止中间人攻击。</p>
+<p>通常需要和DHCP的snooping结合使用，因为要利用到DHCP snooping技术生成的绑定表。也可静态写IP和MAC的绑定表</p>
+<p>原理：启用DAI后，将接口分为trusted和untrusted。对于untrusted接口，要进行ARP的检查，必须是和绑定表中的条目相匹配的ARP包才允许通过。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ip arp inspection vlan 1    //启用</span><br><span class="line"> </span><br><span class="line">int f0/1</span><br><span class="line">  ip arp inspection trust  //指定arp检测的trust接口，一定要做</span><br><span class="line"> </span><br><span class="line">ip arp inspection limit rate 100  //限制每秒所接收的arp包个数</span><br><span class="line"> </span><br><span class="line">show ip arp inspection interfaces</span><br><span class="line">show ip arp inspection vlan 1</span><br><span class="line"> </span><br><span class="line">一个实际案例：(不跟DHCP的snooping结合，单独使用DAI)</span><br><span class="line"> </span><br><span class="line">arp access-list CCNP</span><br><span class="line">  permit ip host 162.16.40.1 mac host 0000.0c07.ac28</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">Cisco7609_2(config)#ip arp inspection vlan 40</span><br><span class="line">Cisco7609_2(config)#ip arp inspection filter CCNP vlan 40 static</span><br></pre></td></tr></table></figure></p>
+<p>注意：ARP包是直接封装进二层的，所以上面的源保护技术没法对付ARP欺骗</p>
+<p>广播/组播抑制：</p>
+<p>用于对流入端口的广播和组播流量进行监控，超过阀值后丢弃数据包。</p>
+<p>3550（config-if）#storm-control broadcast level 5  按百分比进行监控<br>3550（config-if）#storm-control broadcast bps 10  按实际流量，注意单位是M</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/26/两台思科2504-WLC配置主备双活/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1300,7 +1467,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1313,7 +1480,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
