@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="WLC故障切换配置（冗余） 为了实现 WLC故障切换或冗余，必须完成以下步骤：A． 为两台WLC配置移动组.B. 为LAP 指定主、备WLCC．配置WLC Fallback特性为2台WLC配置移动组  通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC上。当主WLC恢复正常，AP可以重新注册到该台WL">
+<meta name="description" content="WLC故障切换配置（冗余） 为了实现 WLC故障切换或冗余，必须完成以下步骤：A． 为两台WLC配置移动组.B. 为LAP 指定主、备WLCC．配置WLC Fallback特性">
 <meta name="keywords" content="WLC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="两台思科2504 WLC配置主备双活">
 <meta property="og:url" content="http://yoursite.com/2019/02/26/两台思科2504-WLC配置主备双活/index.html">
-<meta property="og:site_name" content="简">
-<meta property="og:description" content="WLC故障切换配置（冗余） 为了实现 WLC故障切换或冗余，必须完成以下步骤：A． 为两台WLC配置移动组.B. 为LAP 指定主、备WLCC．配置WLC Fallback特性为2台WLC配置移动组  通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC上。当主WLC恢复正常，AP可以重新注册到该台WL">
+<meta property="og:site_name" content="熙熙攘攘">
+<meta property="og:description" content="WLC故障切换配置（冗余） 为了实现 WLC故障切换或冗余，必须完成以下步骤：A． 为两台WLC配置移动组.B. 为LAP 指定主、备WLCC．配置WLC Fallback特性">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/szonTRh.jpg">
 <meta property="og:image" content="https://i.imgur.com/0GDaCgK.jpg">
@@ -93,10 +93,10 @@
 <meta property="og:image" content="https://i.imgur.com/d5IOzNW.jpg">
 <meta property="og:image" content="https://i.imgur.com/cmykZVb.jpg">
 <meta property="og:image" content="https://i.imgur.com/Hz3byhH.jpg">
-<meta property="og:updated_time" content="2019-02-26T11:45:22.977Z">
+<meta property="og:updated_time" content="2019-10-11T13:50:13.997Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="两台思科2504 WLC配置主备双活">
-<meta name="twitter:description" content="WLC故障切换配置（冗余） 为了实现 WLC故障切换或冗余，必须完成以下步骤：A． 为两台WLC配置移动组.B. 为LAP 指定主、备WLCC．配置WLC Fallback特性为2台WLC配置移动组  通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC上。当主WLC恢复正常，AP可以重新注册到该台WL">
+<meta name="twitter:description" content="WLC故障切换配置（冗余） 为了实现 WLC故障切换或冗余，必须完成以下步骤：A． 为两台WLC配置移动组.B. 为LAP 指定主、备WLCC．配置WLC Fallback特性">
 <meta name="twitter:image" content="https://i.imgur.com/szonTRh.jpg">
 
 
@@ -133,7 +133,7 @@
 
 
 
-  <title>两台思科2504 WLC配置主备双活 | 简</title>
+  <title>两台思科2504 WLC配置主备双活 | 熙熙攘攘</title>
   
 
 
@@ -163,7 +163,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简</span>
+        <span class="site-title">熙熙攘攘</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -245,11 +245,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -308,7 +308,8 @@
 
       
         <h1 id="WLC故障切换配置（冗余）"><a href="#WLC故障切换配置（冗余）" class="headerlink" title="WLC故障切换配置（冗余）"></a>WLC故障切换配置（冗余）</h1><p><img src="https://i.imgur.com/szonTRh.jpg" alt=""></p>
-<h3 id="为了实现-WLC故障切换或冗余，必须完成以下步骤："><a href="#为了实现-WLC故障切换或冗余，必须完成以下步骤：" class="headerlink" title="为了实现 WLC故障切换或冗余，必须完成以下步骤："></a>为了实现 WLC故障切换或冗余，必须完成以下步骤：</h3><h4 id="A．-为两台WLC配置移动组"><a href="#A．-为两台WLC配置移动组" class="headerlink" title="A． 为两台WLC配置移动组."></a>A． 为两台WLC配置移动组.</h4><h4 id="B-为LAP-指定主、备WLC"><a href="#B-为LAP-指定主、备WLC" class="headerlink" title="B. 为LAP 指定主、备WLC"></a>B. 为LAP 指定主、备WLC</h4><h4 id="C．配置WLC-Fallback特性"><a href="#C．配置WLC-Fallback特性" class="headerlink" title="C．配置WLC Fallback特性"></a>C．配置WLC Fallback特性</h4><p><strong>为2台WLC配置移动组</strong> </p>
+<h3 id="为了实现-WLC故障切换或冗余，必须完成以下步骤："><a href="#为了实现-WLC故障切换或冗余，必须完成以下步骤：" class="headerlink" title="为了实现 WLC故障切换或冗余，必须完成以下步骤："></a>为了实现 WLC故障切换或冗余，必须完成以下步骤：</h3><h4 id="A．-为两台WLC配置移动组"><a href="#A．-为两台WLC配置移动组" class="headerlink" title="A． 为两台WLC配置移动组."></a>A． 为两台WLC配置移动组.</h4><h4 id="B-为LAP-指定主、备WLC"><a href="#B-为LAP-指定主、备WLC" class="headerlink" title="B. 为LAP 指定主、备WLC"></a>B. 为LAP 指定主、备WLC</h4><h4 id="C．配置WLC-Fallback特性"><a href="#C．配置WLC-Fallback特性" class="headerlink" title="C．配置WLC Fallback特性"></a>C．配置WLC Fallback特性</h4><a id="more"></a>
+<p><strong>为2台WLC配置移动组</strong> </p>
 <p><strong>通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余<br>的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC<br>上。当主WLC恢复正常，AP可以重新注册到该台WLC上。故障切换时间为30秒，<br>这个期间通信将会中断。</strong></p>
 <blockquote>
 <p>提示: 所有属于同一个移动组的WLC配置的移动组名字要一致，且大小写敏感。<br>移动组成员必须包括该组内所有的WLC，以确保可以做到WLC的无缝切换，以及当<br>主WLC恢复正常，能够让AP重新注册。<br>本实例移动组包括两台WLC，通过以下步骤配置无线移动组：*</p>
@@ -454,7 +455,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image" src="https://i.imgur.com/VRLrl1E.jpg" alt="Karl Li">
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Karl Li">
             
               <p class="site-author-name" itemprop="name">Karl Li</p>
               <p class="site-description motion-element" itemprop="description">美妙人生的关键在于你迷上什么东西</p>

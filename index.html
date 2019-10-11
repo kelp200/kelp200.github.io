@@ -81,13 +81,13 @@
 
 <meta name="description" content="美妙人生的关键在于你迷上什么东西">
 <meta property="og:type" content="website">
-<meta property="og:title" content="简">
+<meta property="og:title" content="熙熙攘攘">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="简">
+<meta property="og:site_name" content="熙熙攘攘">
 <meta property="og:description" content="美妙人生的关键在于你迷上什么东西">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简">
+<meta name="twitter:title" content="熙熙攘攘">
 <meta name="twitter:description" content="美妙人生的关键在于你迷上什么东西">
 
 
@@ -124,7 +124,7 @@
 
 
 
-  <title>简</title>
+  <title>熙熙攘攘</title>
   
 
 
@@ -155,7 +155,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简</span>
+        <span class="site-title">熙熙攘攘</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -237,11 +237,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -358,11 +358,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -482,11 +482,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -547,48 +547,15 @@
 
       
         
-          
-            <h1 id="WLC故障切换配置（冗余）"><a href="#WLC故障切换配置（冗余）" class="headerlink" title="WLC故障切换配置（冗余）"></a>WLC故障切换配置（冗余）</h1><p><img src="https://i.imgur.com/szonTRh.jpg" alt=""></p>
-<h3 id="为了实现-WLC故障切换或冗余，必须完成以下步骤："><a href="#为了实现-WLC故障切换或冗余，必须完成以下步骤：" class="headerlink" title="为了实现 WLC故障切换或冗余，必须完成以下步骤："></a>为了实现 WLC故障切换或冗余，必须完成以下步骤：</h3><h4 id="A．-为两台WLC配置移动组"><a href="#A．-为两台WLC配置移动组" class="headerlink" title="A． 为两台WLC配置移动组."></a>A． 为两台WLC配置移动组.</h4><h4 id="B-为LAP-指定主、备WLC"><a href="#B-为LAP-指定主、备WLC" class="headerlink" title="B. 为LAP 指定主、备WLC"></a>B. 为LAP 指定主、备WLC</h4><h4 id="C．配置WLC-Fallback特性"><a href="#C．配置WLC-Fallback特性" class="headerlink" title="C．配置WLC Fallback特性"></a>C．配置WLC Fallback特性</h4><p><strong>为2台WLC配置移动组</strong> </p>
-<p><strong>通过配置移动组可以让无线客户端在一组WLC之间无缝漫游及提供负载均衡和冗余<br>的功能。如果一台WLC故障，相关联的AP可以自动启动换到移动组中其他WLC<br>上。当主WLC恢复正常，AP可以重新注册到该台WLC上。故障切换时间为30秒，<br>这个期间通信将会中断。</strong></p>
-<blockquote>
-<p>提示: 所有属于同一个移动组的WLC配置的移动组名字要一致，且大小写敏感。<br>移动组成员必须包括该组内所有的WLC，以确保可以做到WLC的无缝切换，以及当<br>主WLC恢复正常，能够让AP重新注册。<br>本实例移动组包括两台WLC，通过以下步骤配置无线移动组：*</p>
-</blockquote>
-<h3 id="1-WLC图形界面下，在上方的菜单下点击进入-Controller，然后在左边菜单"><a href="#1-WLC图形界面下，在上方的菜单下点击进入-Controller，然后在左边菜单" class="headerlink" title="1.   WLC图形界面下，在上方的菜单下点击进入 Controller，然后在左边菜单"></a>1.   WLC图形界面下，在上方的菜单下点击进入 Controller，然后在左边菜单</h3><blockquote>
-<p>选择Mobility Groups . 出现窗口Static Mobility Group Members，在这里可以增加<br><img src="https://i.imgur.com/0GDaCgK.jpg" alt=""></p>
-</blockquote>
-<h3 id="2-增加一个新的移动组"><a href="#2-增加一个新的移动组" class="headerlink" title="2.   增加一个新的移动组"></a>2.   增加一个新的移动组</h3><p>本例只包括两台WLC. </p>
-<blockquote>
-<p>a.选择 New .<br>b.设定移动组成员IP、MAC以及组名称.<br>c.点击 Apply .</p>
-</blockquote>
-<p>本实例第二台WLC的IP为172.16.1.50 ，MAC地址为00:0b:85:33:52:80, 移动组为Test.</p>
-<p><img src="https://i.imgur.com/r564DgB.jpg" alt=""></p>
-<p>通过Ping菜单检测移动组成员的连通性.<br><img src="https://i.imgur.com/d5IOzNW.jpg" alt=""><br>在另一台WLC上重复以上步骤，组名字大小写敏感，并且在两台WLC上必须要一致。移动组主要用于支持在WLC内部以及WLC之间漫游。为LAP指定主，备WLC </p>
-<h3 id="接下来的步骤为LAP指定主、备WLC："><a href="#接下来的步骤为LAP指定主、备WLC：" class="headerlink" title="接下来的步骤为LAP指定主、备WLC："></a>接下来的步骤为LAP指定主、备WLC：</h3><blockquote>
-<p>1.图形界面下选择 Wireless 菜单，选择AP列表下的AP，点击  Detail<br>出现新的窗口All APs Details.</p>
-</blockquote>
-<p><img src="https://i.imgur.com/cmykZVb.jpg" alt=""><br>在该窗口下，定义主、备WLC。.<br>Note: 在主、备WLC下输入相关WLC的名字，而不是输入IP或MAC.  </p>
-<h3 id="配置WLC-Fallback特性"><a href="#配置WLC-Fallback特性" class="headerlink" title="配置WLC Fallback特性"></a>配置WLC Fallback特性</h3><h3 id="最后一步是配置WLC-Fallback特性"><a href="#最后一步是配置WLC-Fallback特性" class="headerlink" title="最后一步是配置WLC Fallback特性:"></a>最后一步是配置WLC Fallback特性:</h3><blockquote>
-<ol>
-<li>WLC图形界面下进入 CONTROLLER GENERAL. </li>
-<li>在AP FALLBACK 选项, 选择ENABLED   </li>
-<li>CLICK APPLY . </li>
-</ol>
-</blockquote>
-<blockquote>
-<p>Note: 在备用WLC上配置Fallback特性即可。既便如此，建议在所有WLC上配置Fallback特性，因为，主WLC同样可以作为其他AP的备用WLC。</p>
-</blockquote>
-<p><img src="https://i.imgur.com/Hz3byhH.jpg" alt=""><br>至此WLC故障切换配置完成。当主WLC（本例为WLC-1）出现故障，AP会自动注册<br>到WLC-2上，当WLC-1恢复正常，AP便重新注册到WLC-1上，主、备WLC的切换<br>同样会影响AP上的客户端。</p>
-<blockquote>
-<p>提示注意项：<br>有时，同一移动组下的瘦AP被其他WLC认为是非法AP，这是一个bug.<br>这会发生在以下两种情况下： </p>
-<ol>
-<li>AP有多于24个邻居，而AP最多支持24个，其余的将视为非法AP。  </li>
-<li>AP1可以发现注册到AP2上的客户端，但是无法发现AP2，因此无法将AP2<br>当做一个邻居。</li>
-</ol>
-</blockquote>
-<p>解决方式为在WLC或者WCS上手动配置AP known internal，配置步骤如下：</p>
-<h5 id="1-WLC图形界面下选择-Wireless"><a href="#1-WLC图形界面下选择-Wireless" class="headerlink" title="1.   WLC图形界面下选择 Wireless."></a>1.   WLC图形界面下选择 Wireless.</h5><h5 id="2-在左边菜单下点击Rogue-Aps"><a href="#2-在左边菜单下点击Rogue-Aps" class="headerlink" title="2.   在左边菜单下点击Rogue Aps ."></a>2.   在左边菜单下点击Rogue Aps .</h5><h5 id="3-在非法AP下点击-Edit"><a href="#3-在非法AP下点击-Edit" class="headerlink" title="3.   在非法AP下点击 Edit."></a>3.   在非法AP下点击 Edit.</h5><h5 id="4-在Update-Status-菜单下选择-Known-internal-，点击-Apply"><a href="#4-在Update-Status-菜单下选择-Known-internal-，点击-Apply" class="headerlink" title="4.   在Update Status  菜单下选择 Known internal ，点击  Apply ."></a>4.   在Update Status  菜单下选择 Known internal ，点击  Apply .</h5>
-          
+          <h1 id="WLC故障切换配置（冗余）"><a href="#WLC故障切换配置（冗余）" class="headerlink" title="WLC故障切换配置（冗余）"></a>WLC故障切换配置（冗余）</h1><p><img src="https://i.imgur.com/szonTRh.jpg" alt=""></p>
+<h3 id="为了实现-WLC故障切换或冗余，必须完成以下步骤："><a href="#为了实现-WLC故障切换或冗余，必须完成以下步骤：" class="headerlink" title="为了实现 WLC故障切换或冗余，必须完成以下步骤："></a>为了实现 WLC故障切换或冗余，必须完成以下步骤：</h3><h4 id="A．-为两台WLC配置移动组"><a href="#A．-为两台WLC配置移动组" class="headerlink" title="A． 为两台WLC配置移动组."></a>A． 为两台WLC配置移动组.</h4><h4 id="B-为LAP-指定主、备WLC"><a href="#B-为LAP-指定主、备WLC" class="headerlink" title="B. 为LAP 指定主、备WLC"></a>B. 为LAP 指定主、备WLC</h4><h4 id="C．配置WLC-Fallback特性"><a href="#C．配置WLC-Fallback特性" class="headerlink" title="C．配置WLC Fallback特性"></a>C．配置WLC Fallback特性</h4>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/02/26/两台思科2504-WLC配置主备双活/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -640,11 +607,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -765,11 +732,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -891,11 +858,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -1016,11 +983,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -1146,11 +1113,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -1265,11 +1232,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -1390,11 +1357,11 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Karl Li">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://i.imgur.com/VRLrl1E.jpg">
+      <meta itemprop="image" content="/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简">
+      <meta itemprop="name" content="熙熙攘攘">
     </span>
 
     
@@ -1532,7 +1499,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
-              <img class="site-author-image" itemprop="image" src="https://i.imgur.com/VRLrl1E.jpg" alt="Karl Li">
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Karl Li">
             
               <p class="site-author-name" itemprop="name">Karl Li</p>
               <p class="site-description motion-element" itemprop="description">美妙人生的关键在于你迷上什么东西</p>
