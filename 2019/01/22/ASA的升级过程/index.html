@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="简">
 <meta property="og:description" content="一、升级前准备工作1、准备好所要升级的IOS文件及对应的ASDM文件2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2） 二、升级步骤">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-23T14:33:11.579Z">
+<meta property="og:updated_time" content="2019-10-11T13:34:53.083Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kali">
 <meta name="twitter:description" content="一、升级前准备工作1、准备好所要升级的IOS文件及对应的ASDM文件2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2） 二、升级步骤">
@@ -300,7 +300,8 @@
 
       
         <p>一、升级前准备工作<br>1、准备好所要升级的IOS文件及对应的ASDM文件<br>2、在一台电脑上架设好tftp，设置好目录，与防火墙进行连接（假设电脑IP为192.168.1.2）</p>
-<p>二、升级步骤<br><a id="more"></a><br>1、telnet上ASA<br>ASA&gt;ena                    //进入特权模式<br>ASA#conf t                 //进入配置模式</p>
+<p>二、升级步骤<br><a id="more"></a></p>
+<p>1、telnet上ASA<br>ASA&gt;ena                    //进入特权模式<br>ASA#conf t                 //进入配置模式</p>
 <p>2、查看ASA上的文件、版本信息及启动文件<br>ASA(config)# dir           //查看asa上的文件<br>Directory of disk0:/<br>4879   -rw- 8202240   19:18:10 Nov 16 2011   asa721-k8.bin<br>2391   -rw- 5539756   00:43:38 Nov 05 2007   asdm521.bin<br>4842   drw- 0         18:51:24 Nov 16 2011 log<br>4843   drw- 0         18:51:36 Nov 16 2011 crypto_archive<br>255426560 bytes total (215465984 bytes free)</p>
 <p>CISCOASA(config)# show ver      //查看版本信息及启动文件<br>Cisco Adaptive Security Appliance Software Version 7.2(1)<br>Device Manager Version 5.2(1)<br>。。。。。<br>System image file is “disk0:/asa721-k8.bin” //这就是启动文件和路径<br>。。。。。</p>
 <p>3、备份ASA上现存版本文件、ASDM文件及配置信息<br>ASA(config)#copy disk0:/asa721-k8.bin t<a href="ftp://192.168.1.2/asa721-k8.bin" target="_blank" rel="noopener">ftp://192.168.1.2/asa721-k8.bin</a><br>//将原有IOS文件备份到TFTP服务器上<br>ASA(config)# copy disk0:/asdm521.bin t<a href="ftp://192.168.1.2/asdm521.bin" target="_blank" rel="noopener">ftp://192.168.1.2/asdm521.bin</a><br>//将原有asdm文件备份到TFTP服务器上<br>show run<br>//显示当前的配置，将此配置复制后备份下来，以免操作失误导致配置丢失</p>
